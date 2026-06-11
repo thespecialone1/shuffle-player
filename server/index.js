@@ -14,8 +14,14 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Ensure covers directory exists
+const coversDir = path.join(__dirname, '../public/covers');
+if (!fs.existsSync(coversDir)) {
+  fs.mkdirSync(coversDir, { recursive: true });
+}
+
 // Serve covers statically
-app.use('/covers', express.static(path.join(__dirname, '../public/covers')));
+app.use('/covers', express.static(coversDir));
 
 // Fallback dummy cover art
 const fallbackCover = 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=400';

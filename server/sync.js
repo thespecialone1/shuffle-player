@@ -88,7 +88,10 @@ export async function syncMusicFolder() {
           coverArt = `/covers/${coverFileName}`;
         } catch (e) {
           console.error('Failed to write cover art:', e);
+          coverArt = 'ERROR_WRITING_FILE';
         }
+      } else {
+        coverArt = 'NO_PICTURE_FOUND';
       }
       
       parsedData.push({
@@ -97,8 +100,9 @@ export async function syncMusicFolder() {
         artist,
         album,
         duration: Math.floor(duration),
-        coverArt,
-        filePath
+        coverArt: coverArt && coverArt.startsWith('/covers') ? coverArt : null,
+        filePath,
+        debugDetails: coverArt
       });
       
       processed++;
@@ -129,5 +133,5 @@ export async function syncMusicFolder() {
     console.log(`Removed ${existingPaths.size} missing files from database.`);
   }
 
-  return { success: true, processed, errors, removed: existingPaths.size };
+  return { success: true, processed, errors, removed: existingPaths.size, details: parsedData };
 }
