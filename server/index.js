@@ -16,8 +16,12 @@ app.use(express.json());
 
 // Ensure covers directory exists
 const coversDir = path.join(__dirname, '../public/covers');
-if (!fs.existsSync(coversDir)) {
-  fs.mkdirSync(coversDir, { recursive: true });
+try {
+  if (!fs.existsSync(coversDir)) {
+    fs.mkdirSync(coversDir, { recursive: true });
+  }
+} catch (e) {
+  console.error("Failed to create covers dir on startup:", e);
 }
 
 // Serve covers statically
