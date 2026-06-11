@@ -20,6 +20,33 @@ app.use('/covers', express.static(path.join(__dirname, '../public/covers')));
 // Fallback dummy cover art
 const fallbackCover = 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=400';
 
+// API: Debug covers
+app.get('/api/debug-covers', (req, res) => {
+  try {
+    const stmt = db.prepare('SELECT id, title, coverArt, filePath FROM tracks');
+    const tracks = stmt.all();
+    const coversDir = path.join(__dirname, '../public/covers');
+    let coversOnDisk = [];
+    try {
+      coversOnDisk = fs.readdirSync(coversDir);
+    } catch(e) {}
+    
+    res.json({
+      tracks: tracks.map(t => ({
+        ...t, 
+        diskExists: t.coverArt ? coversOnDisk.includes(t.coverArt.replace('/covers/', '')) : false
+      })),
+      coversFolder: {
+        path: coversDir,
+        exists: fs.existsSync(coversDir),
+        contents: coversOnDisk
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API: Sync music folder
 app.post('/api/sync', async (req, res) => {
   try {
