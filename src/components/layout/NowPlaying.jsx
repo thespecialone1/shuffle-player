@@ -3,7 +3,16 @@ import { ChevronDown, Play, Pause, SkipForward, SkipBack, Shuffle, Repeat } from
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function NowPlaying() {
-  const { currentTrack, isPlaying, togglePlay, closeNowPlaying } = usePlayerStore();
+  const { currentTrack, isPlaying, togglePlay, closeNowPlaying, progress, duration, setProgress, setSeekTo } = usePlayerStore();
+
+  const progressPercent = duration ? (progress / duration) * 100 : 0;
+  
+  const formatTime = (seconds) => {
+    if (!seconds) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   if (!currentTrack) return null;
 
@@ -43,14 +52,25 @@ export default function NowPlaying() {
           <p className="text-[18px] sm:text-[20px] text-[var(--color-text-secondary)] text-ellipsis-1">{currentTrack.artist}</p>
         </div>
 
-        {/* Scrubber Placeholder */}
-        <div className="w-full mb-8">
-          <div className="w-full h-[4px] bg-[rgba(255,255,255,0.1)] rounded-full relative">
-            <div className="absolute left-0 top-0 h-full bg-[var(--art-color)] rounded-full w-1/3" />
+        {/* Scrubber */}
+        <div className="w-full mb-8 relative group">
+          <div className="w-full h-[4px] bg-[rgba(255,255,255,0.1)] rounded-full relative pointer-events-none">
+            <div className="absolute left-0 top-0 h-full bg-[var(--art-color)] rounded-full" style={{ width: `${progressPercent}%` }} />
           </div>
-          <div className="flex justify-between text-xs text-[var(--color-text-tertiary)] mt-2 font-mono">
-            <span>1:04</span>
-            <span>3:45</span>
+          <input 
+            type="range" 
+            min="0" max={duration || 100} step="0.1" 
+            value={progress || 0}
+            onChange={(e) => {
+              const newTime = parseFloat(e.target.value);
+              setProgress(newTime);
+              setSeekTo(newTime);
+            }}
+            className="absolute top-1/2 left-0 w-full -translate-y-1/2 h-[24px] opacity-0 cursor-pointer m-0 z-50"
+          />
+          <div className="flex justify-between text-xs text-[var(--color-text-tertiary)] mt-2 font-mono pointer-events-none">
+            <span>{formatTime(progress)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
 
