@@ -12,6 +12,7 @@ export const usePlayerStore = create((set, get) => ({
   progress: 0,
   duration: 0,
   isMuted: false,
+  seekTo: null,
   
   // UI State
   isQueueOpen: false,
@@ -108,6 +109,7 @@ export const usePlayerStore = create((set, get) => ({
   setProgress: (progress) => set({ progress }),
   setDuration: (duration) => set({ duration }),
   setBuffering: (isBuffering) => set({ isBuffering }),
+  setSeekTo: (time) => set({ seekTo: time }),
   
   setDominantColor: (color) => {
     set({ dominantColor: color });

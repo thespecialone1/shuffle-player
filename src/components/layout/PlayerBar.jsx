@@ -12,9 +12,18 @@ export default function PlayerBar() {
       
       {/* Scrubber - Absolute top of bar */}
       <div className="absolute top-0 left-0 w-full h-[20px] -translate-y-1/2 group cursor-pointer flex items-center sm:px-4">
-        <div className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full overflow-hidden transition-all duration-200 relative">
-           <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
-        </div>
+        <input 
+          type="range" 
+          min="0" max={duration || 100} step="0.1" 
+          value={progress || 0}
+          onChange={(e) => {
+            const newTime = parseFloat(e.target.value);
+            usePlayerStore.getState().setProgress(newTime);
+            usePlayerStore.getState().setSeekTo(newTime);
+          }}
+          className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0 group-hover:[&::-webkit-slider-thumb]:w-3 group-hover:[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--color-text-primary)] transition-all duration-200"
+          style={{ backgroundSize: `${progressPercent}% 100%`, backgroundImage: 'linear-gradient(var(--art-color), var(--art-color))', backgroundRepeat: 'no-repeat' }}
+        />
       </div>
 
       {/* Info */}

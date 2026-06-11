@@ -9,14 +9,16 @@ export default defineConfig({
     port: 80,
     host: true,
     proxy: {
-      '/api': 'http://localhost:3001'
+      '/api': 'http://localhost:3001',
+      '/covers': 'http://localhost:3001'
     }
   },
   preview: {
     port: 80,
     host: true,
     proxy: {
-      '/api': 'http://localhost:3001'
+      '/api': 'http://localhost:3001',
+      '/covers': 'http://localhost:3001'
     }
   },
   plugins: [

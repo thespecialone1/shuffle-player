@@ -5,11 +5,16 @@ import path from 'path';
 import db from './db.js';
 import { syncMusicFolder } from './sync.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve covers statically
+app.use('/covers', express.static(path.join(__dirname, '../public/covers')));
 
 // Fallback dummy cover art
 const fallbackCover = 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=400';

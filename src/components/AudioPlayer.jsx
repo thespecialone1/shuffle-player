@@ -14,8 +14,31 @@ export default function AudioPlayer() {
     setDominantColor,
     nextTrack,
     pause,
-    play
+    play,
+    togglePlay,
+    seekTo,
+    setSeekTo
   } = usePlayerStore();
+
+  useEffect(() => {
+    if (seekTo !== null && audioRef.current) {
+      audioRef.current.currentTime = seekTo;
+      setSeekTo(null);
+    }
+  }, [seekTo, setSeekTo]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if focusing an input or textarea
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [togglePlay]);
 
   useEffect(() => {
     if (audioRef.current) {
