@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { fetchPlaylists } from '../lib/api';
 
 export const usePlayerStore = create((set, get) => ({
   // Audio State
@@ -18,8 +19,19 @@ export const usePlayerStore = create((set, get) => ({
   dominantColor: '#1A1A1A', // fallback
   isShuffle: false,
   repeatMode: 'off', // 'off', 'all', 'one'
+  
+  // App State
+  playlists: [],
 
   // Actions
+  loadPlaylists: async () => {
+    try {
+      const playlists = await fetchPlaylists();
+      set({ playlists });
+    } catch (err) {
+      console.error(err);
+    }
+  },
   playTrack: (track) => set({ 
     currentTrack: track, 
     isPlaying: true, 

@@ -72,6 +72,83 @@ app.get('/api/search', (req, res) => {
   }
 });
 
+// Playlists API
+
+app.get('/api/playlists', (req, res) => {
+  try {
+    const stmt = db.prepare('SELECT * FROM playlists ORDER BY createdAt DESC');
+    const playlists = stmt.all();
+    res.json(playlists);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch playlists' });
+  }
+});
+
+app.post('/api/playlists', (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name required' });
+  try {
+    const id = Date.now().toString() + Math.random().toString(36).substring(2, 9);
+    const stmt = db.prepare('INSERT INTO playlists (id, name) VALUES (?, ?)');
+    stmt.run(id, name);
+    res.json({ id, name });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create playlist' });
+  }
+});
+
+app.get('/api/playlists/:id', (req, res) => {
+  const { id } = req.params;
+  try {
+    const playlist = db.prepare('SELECT * FROM playlists WHERE id = ?').get(id);
+    if (!playlist) return res.status(404).json({ error: 'Not found' });
+    
+    const tracks = db.prepare(`
+      SELECT tracks.id, tracks.title, tracks.artist, tracks.album, tracks.duration, pt.position
+      FROM playlist_tracks pt
+      JOIN tracks ON pt.trackId = tracks.id
+      WHERE pt.playlistId = ?
+      ORDER BY pt.position ASC
+    `).all(id).map(r => ({ ...r, coverArt: fallbackCover }));
+    
+    res.json({ ...playlist, tracks });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch playlist' });
+  }
+});
+
+app.post('/api/playlists/:id/tracks', (req, res) => {
+  const { id } = req.params;
+  const { trackId } = req.body;
+  if (!trackId) return res.status(400).json({ error: 'Track ID required' });
+  
+  try {
+    const currentMax = db.prepare('SELECT MAX(position) as maxPos FROM playlist_tracks WHERE playlistId = ?').get(id);
+    const position = (currentMax.maxPos || 0) + 1;
+    
+    const stmt = db.prepare('INSERT INTO playlist_tracks (playlistId, trackId, position) VALUES (?, ?, ?)');
+    stmt.run(id, trackId, position);
+    res.json({ success: true });
+  } catch (error) {
+    // Ignore duplicate inserts gracefully
+    if (error.code === 'SQLITE_CONSTRAINT_PRIMARYKEY') {
+       return res.json({ success: true, message: 'Already in playlist' });
+    }
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add track' });
+  }
+});
+
+app.delete('/api/playlists/:id/tracks/:trackId', (req, res) => {
+  const { id, trackId } = req.params;
+  try {
+    db.prepare('DELETE FROM playlist_tracks WHERE playlistId = ? AND trackId = ?').run(id, trackId);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove track' });
+  }
+});
+
 // API: Stream Audio file
 app.get('/api/stream/:id', (req, res) => {
   const { id } = req.params;

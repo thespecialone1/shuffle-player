@@ -54,6 +54,23 @@ db.exec(`
     INSERT INTO tracks_fts(rowid, id, title, artist, album) 
     VALUES (new.rowid, new.id, new.title, new.artist, new.album);
   END;
+
+  -- Playlists
+  CREATE TABLE IF NOT EXISTS playlists (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS playlist_tracks (
+    playlistId TEXT NOT NULL,
+    trackId TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (playlistId, trackId),
+    FOREIGN KEY (playlistId) REFERENCES playlists(id) ON DELETE CASCADE,
+    FOREIGN KEY (trackId) REFERENCES tracks(id) ON DELETE CASCADE
+  );
 `);
 
 export default db;
