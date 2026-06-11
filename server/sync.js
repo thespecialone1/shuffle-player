@@ -53,12 +53,13 @@ export async function syncMusicFolder() {
   const insertStmt = db.prepare(`
     INSERT INTO tracks (id, title, artist, album, duration, coverArt, filePath)
     VALUES (@id, @title, @artist, @album, @duration, @coverArt, @filePath)
-    ON CONFLICT(filePath) DO UPDATE SET
+    ON CONFLICT(id) DO UPDATE SET
       title = excluded.title,
       artist = excluded.artist,
       album = excluded.album,
       duration = excluded.duration,
-      coverArt = excluded.coverArt
+      coverArt = excluded.coverArt,
+      filePath = excluded.filePath
   `);
 
   const existingPaths = new Set(db.prepare('SELECT filePath FROM tracks').all().map(row => row.filePath));
