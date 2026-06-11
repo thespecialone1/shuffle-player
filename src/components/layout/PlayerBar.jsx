@@ -11,7 +11,10 @@ export default function PlayerBar() {
     <div className="fixed bottom-0 left-0 w-full h-[72px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] z-40 px-2 sm:px-4 flex items-center justify-between hover-glow backdrop-blur-xl">
       
       {/* Scrubber - Absolute top of bar */}
-      <div className="absolute top-0 left-0 w-full h-[20px] -translate-y-1/2 group cursor-pointer flex items-center sm:px-4">
+      <div className="absolute top-0 left-0 w-full h-[24px] -translate-y-1/2 group cursor-pointer flex items-center sm:px-4 z-50">
+        <div className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full overflow-hidden transition-all duration-200 relative pointer-events-none">
+           <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
+        </div>
         <input 
           type="range" 
           min="0" max={duration || 100} step="0.1" 
@@ -21,8 +24,7 @@ export default function PlayerBar() {
             usePlayerStore.getState().setProgress(newTime);
             usePlayerStore.getState().setSeekTo(newTime);
           }}
-          className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0 group-hover:[&::-webkit-slider-thumb]:w-3 group-hover:[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--color-text-primary)] transition-all duration-200"
-          style={{ backgroundSize: `${progressPercent}% 100%`, backgroundImage: 'linear-gradient(var(--art-color), var(--art-color))', backgroundRepeat: 'no-repeat' }}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer m-0"
         />
       </div>
 
@@ -48,15 +50,15 @@ export default function PlayerBar() {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col items-center justify-center flex-1 max-w-[400px]">
-        <div className="flex items-center gap-4 sm:gap-6">
+      <div className="flex flex-col items-center justify-center sm:flex-1 w-auto sm:max-w-[400px]">
+        <div className="flex items-center gap-3 sm:gap-6">
           <button 
             onClick={() => usePlayerStore.getState().toggleShuffle()}
             className={`hidden sm:block transition-colors cursor-pointer ${usePlayerStore.getState().isShuffle ? 'text-[var(--color-accent)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
           >
             <Shuffle size={18} />
           </button>
-          <button className="text-[var(--color-text-primary)] hover:text-white transition-colors cursor-pointer hidden sm:block" onClick={() => usePlayerStore.getState().prevTrack()}><SkipBack size={20} fill="currentColor" /></button>
+          <button className="text-[var(--color-text-primary)] hover:text-white transition-colors cursor-pointer" onClick={() => usePlayerStore.getState().prevTrack()}><SkipBack size={20} fill="currentColor" /></button>
           
           <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[var(--color-text-primary)] text-[var(--color-surface-0)] hover:scale-105 transition-transform cursor-pointer shadow-lg">
             {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-1" />}
