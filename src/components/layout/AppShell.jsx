@@ -11,7 +11,7 @@ export default function AppShell() {
   const isNowPlayingFullscreen = usePlayerStore(state => state.isNowPlayingFullscreen);
 
   return (
-    <div className="flex h-screen w-full flex-col sm:flex-row bg-[var(--color-surface-0)] text-[var(--color-text-primary)] overflow-hidden">
+    <div className="flex h-[100dvh] w-full flex-col sm:flex-row bg-[var(--color-surface-0)] text-[var(--color-text-primary)] overflow-hidden">
       {/* Nav Rail on the left (desktop) or top/hidden (mobile, but we handle it via flex order/position) */}
       {/* Wait, standard App Shell has Nav Rail on left, Player Bar at bottom. Main content fills the rest. */}
       {/* On mobile, Nav Rail becomes a bottom tab bar just ABOVE the mini-player, or we can make Player Bar fixed at bottom and Nav Rail fixed above it. */}

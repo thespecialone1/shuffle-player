@@ -78,30 +78,28 @@ export const usePlayerStore = create((set, get) => ({
   }),
   
   nextTrack: () => set((state) => {
-    if (state.repeatMode === 'one') {
+    if (state.repeatMode === 'one' || state.queue.length === 0 || (state.queueIndex >= state.queue.length - 1 && state.repeatMode !== 'all')) {
       // Just restart the current track
-      // The audio element will handle playing if we reset progress, but we need to trigger it.
-      // Easiest is to keep same index. Audio element onEnded triggers this, we might need a signal to restart.
-      return { progress: 0, isPlaying: true };
+      return { progress: 0, seekTo: 0, isPlaying: true };
     }
     if (state.queueIndex < state.queue.length - 1) {
       const nextIndex = state.queueIndex + 1;
-      return { queueIndex: nextIndex, currentTrack: state.queue[nextIndex], isPlaying: true, progress: 0 };
+      return { queueIndex: nextIndex, currentTrack: state.queue[nextIndex], isPlaying: true, progress: 0, seekTo: 0 };
     } else if (state.repeatMode === 'all' && state.queue.length > 0) {
-      return { queueIndex: 0, currentTrack: state.queue[0], isPlaying: true, progress: 0 };
+      return { queueIndex: 0, currentTrack: state.queue[0], isPlaying: true, progress: 0, seekTo: 0 };
     }
     return state;
   }),
   prevTrack: () => set((state) => {
-    // If progress is more than 3 seconds, just restart track. Wait, keep it simple for now.
-    if (state.progress > 3) {
-      return { progress: 0 };
+    // Restart if we are past 3 seconds, or if there's no previous track
+    if (state.progress > 3 || state.queueIndex === 0 || state.queue.length === 0) {
+      return { progress: 0, seekTo: 0, isPlaying: true };
     }
     if (state.queueIndex > 0) {
       const prevIndex = state.queueIndex - 1;
-      return { queueIndex: prevIndex, currentTrack: state.queue[prevIndex], isPlaying: true, progress: 0 };
+      return { queueIndex: prevIndex, currentTrack: state.queue[prevIndex], isPlaying: true, progress: 0, seekTo: 0 };
     }
-    return { progress: 0 };
+    return { progress: 0, seekTo: 0, isPlaying: true };
   }),
   
   setVolume: (volume) => set({ volume, isMuted: volume === 0 }),
