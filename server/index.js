@@ -29,11 +29,11 @@ app.post('/api/sync', async (req, res) => {
 app.get('/api/tracks', (req, res) => {
   try {
     // Pagination could be added here, but for a personal library, returning all is usually fine unless > 10k tracks
-    const stmt = db.prepare('SELECT id, title, artist, album, duration FROM tracks ORDER BY artist, album, title');
+    const stmt = db.prepare('SELECT id, title, artist, album, duration, coverArt FROM tracks ORDER BY artist, album, title');
     const rows = stmt.all();
     
-    // Add fake coverart for UI testing since we skipped extracting it to save space
-    const tracks = rows.map(r => ({ ...r, coverArt: fallbackCover }));
+    // Add fake coverart for UI testing if track has no coverArt
+    const tracks = rows.map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
     res.json(tracks);
   } catch (error) {
     res.status(500).json({ error: 'Database error' });
@@ -55,7 +55,7 @@ app.get('/api/search', (req, res) => {
     if (!safeQuery) return res.json([]);
 
     const stmt = db.prepare(`
-      SELECT tracks.id, tracks.title, tracks.artist, tracks.album, tracks.duration
+      SELECT tracks.id, tracks.title, tracks.artist, tracks.album, tracks.duration, tracks.coverArt
       FROM tracks_fts
       JOIN tracks ON tracks.rowid = tracks_fts.rowid
       WHERE tracks_fts MATCH ?
@@ -64,7 +64,7 @@ app.get('/api/search', (req, res) => {
     `);
     
     const rows = stmt.all(safeQuery);
-    const results = rows.map(r => ({ ...r, coverArt: fallbackCover }));
+    const results = rows.map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
     res.json(results);
   } catch (error) {
     console.error('Search error:', error);
@@ -104,12 +104,12 @@ app.get('/api/playlists/:id', (req, res) => {
     if (!playlist) return res.status(404).json({ error: 'Not found' });
     
     const tracks = db.prepare(`
-      SELECT tracks.id, tracks.title, tracks.artist, tracks.album, tracks.duration, pt.position
+      SELECT tracks.id, tracks.title, tracks.artist, tracks.album, tracks.duration, tracks.coverArt, pt.position
       FROM playlist_tracks pt
       JOIN tracks ON pt.trackId = tracks.id
       WHERE pt.playlistId = ?
       ORDER BY pt.position ASC
-    `).all(id).map(r => ({ ...r, coverArt: fallbackCover }));
+    `).all(id).map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
     
     res.json({ ...playlist, tracks });
   } catch (error) {

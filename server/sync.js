@@ -1,8 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { parseFile } from 'music-metadata';
 import crypto from 'crypto';
 import db from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const COVERS_DIR = path.join(__dirname, '../public/covers');
 
 const MUSIC_DIR = process.env.MUSIC_DIR || '/home/ubuntu/music';
 const SUPPORTED_EXTENSIONS = new Set(['.mp3', '.flac', '.m4a', '.wav', '.aac', '.ogg']);
@@ -16,6 +21,13 @@ export async function syncMusicFolder() {
   } catch (err) {
     console.error(`Music directory ${MUSIC_DIR} does not exist or is inaccessible.`);
     return { success: false, error: 'Music directory not found' };
+  }
+
+  // Ensure covers directory exists
+  try {
+    await fs.mkdir(COVERS_DIR, { recursive: true });
+  } catch (err) {
+    console.error(`Failed to create covers directory ${COVERS_DIR}:`, err);
   }
 
   const newFiles = [];
@@ -39,13 +51,14 @@ export async function syncMusicFolder() {
 
   // Prepare SQLite statements
   const insertStmt = db.prepare(`
-    INSERT INTO tracks (id, title, artist, album, duration, filePath)
-    VALUES (@id, @title, @artist, @album, @duration, @filePath)
+    INSERT INTO tracks (id, title, artist, album, duration, coverArt, filePath)
+    VALUES (@id, @title, @artist, @album, @duration, @coverArt, @filePath)
     ON CONFLICT(filePath) DO UPDATE SET
       title = excluded.title,
       artist = excluded.artist,
       album = excluded.album,
-      duration = excluded.duration
+      duration = excluded.duration,
+      coverArt = excluded.coverArt
   `);
 
   const existingPaths = new Set(db.prepare('SELECT filePath FROM tracks').all().map(row => row.filePath));
@@ -62,12 +75,28 @@ export async function syncMusicFolder() {
       const album = metadata.common.album || 'Unknown Album';
       const duration = metadata.format.duration || 0;
       
+      let coverArt = null;
+      if (metadata.common.picture && metadata.common.picture.length > 0) {
+        const pic = metadata.common.picture[0];
+        const ext = pic.format === 'image/png' ? 'png' : 'jpg';
+        const coverFileName = `${id}.${ext}`;
+        const coverPath = path.join(COVERS_DIR, coverFileName);
+        
+        try {
+          await fs.writeFile(coverPath, pic.data);
+          coverArt = `/covers/${coverFileName}`;
+        } catch (e) {
+          console.error('Failed to write cover art:', e);
+        }
+      }
+      
       parsedData.push({
         id,
         title,
         artist,
         album,
         duration: Math.floor(duration),
+        coverArt,
         filePath
       });
       
