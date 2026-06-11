@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search as SearchIcon, Play } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { searchTracks, getStreamUrl } from '../lib/api';
+import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
 export default function Search() {
   const [query, setQuery] = useState('');
@@ -33,7 +34,7 @@ export default function Search() {
 
     setIsSearching(true);
     try {
-      const data = await fetchSearch(q);
+      const data = await searchTracks(q);
       const mappedTracks = data.map(t => ({
         ...t,
         audioUrl: getStreamUrl(t.id)
@@ -87,7 +88,7 @@ export default function Search() {
             return (
               <div 
                 key={track.id}
-                onDoubleClick={() => setQueue(results, idx)}
+                onClick={() => setQueue(results, idx)}
                 className="group flex items-center justify-between p-3 rounded-lg hover:bg-[var(--color-surface-1)] transition-colors cursor-pointer"
                 style={isCurrentlyPlaying ? { background: 'rgba(255,255,255,0.03)' } : {}}
               >
@@ -95,7 +96,7 @@ export default function Search() {
                   <div className="relative w-12 h-12 shrink-0">
                     <img src={track.coverArt} className="w-full h-full rounded object-cover shadow" alt="" />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
-                      <button onClick={() => setQueue(results, idx)} className="text-white hover:scale-110 transition-transform cursor-pointer">
+                      <button onClick={(e) => { e.stopPropagation(); setQueue(results, idx); }} className="text-white hover:scale-110 transition-transform cursor-pointer">
                         <Play size={20} fill="currentColor" />
                       </button>
                     </div>

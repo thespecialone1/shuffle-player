@@ -84,7 +84,7 @@ export default function Library() {
           return (
             <div 
               key={track.id}
-              onDoubleClick={() => handlePlay(idx)}
+              onClick={() => handlePlay(idx)}
               className="group grid grid-cols-[auto_1fr_auto_auto] sm:grid-cols-[auto_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-3 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
               style={isCurrentlyPlaying ? { background: 'rgba(255,255,255,0.03)' } : {}}
             >
