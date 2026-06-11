@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Play, RefreshCw } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { fetchTracks, syncMusic, getStreamUrl } from '../lib/api';
+import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
 export default function Library() {
   const { setQueue, currentTrack, isPlaying } = usePlayerStore();
