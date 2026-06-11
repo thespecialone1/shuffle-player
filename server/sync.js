@@ -50,46 +50,43 @@ export async function syncMusicFolder() {
 
   const existingPaths = new Set(db.prepare('SELECT filePath FROM tracks').all().map(row => row.filePath));
   
-  // Transaction for faster inserts
-  const syncTransaction = db.transaction(async (files) => {
-    for (const filePath of files) {
-      try {
-        existingPaths.delete(filePath); // Mark as still existing
-        
-        // We could optimize by checking file modified times, but parsing everything handles updates easily
-        const metadata = await parseFile(filePath);
-        
-        // Generate a stable ID based on file path
-        const id = crypto.createHash('md5').update(filePath).digest('hex');
-        
-        // Use basic fallback names if tags are missing
-        const title = metadata.common.title || path.basename(filePath, path.extname(filePath));
-        const artist = metadata.common.artist || metadata.common.albumartist || 'Unknown Artist';
-        const album = metadata.common.album || 'Unknown Album';
-        const duration = metadata.format.duration || 0;
-        
-        // Note: Cover art extraction could be added here, but it balloons the database size if stored directly.
-        // Usually it's better to extract on the fly or save the image file alongside the MP3.
-        // We'll skip extracting coverArt bytes into SQLite for now and just serve a default.
+  const parsedData = [];
+  for (const filePath of newFiles) {
+    try {
+      const metadata = await parseFile(filePath);
+      
+      const id = crypto.createHash('md5').update(filePath).digest('hex');
+      
+      const title = metadata.common.title || path.basename(filePath, path.extname(filePath));
+      const artist = metadata.common.artist || metadata.common.albumartist || 'Unknown Artist';
+      const album = metadata.common.album || 'Unknown Album';
+      const duration = metadata.format.duration || 0;
+      
+      parsedData.push({
+        id,
+        title,
+        artist,
+        album,
+        duration: Math.floor(duration),
+        filePath
+      });
+      
+      processed++;
+    } catch (err) {
+      console.error(`Error processing ${filePath}:`, err.message);
+      errors++;
+    }
+  }
 
-        insertStmt.run({
-          id,
-          title,
-          artist,
-          album,
-          duration: Math.floor(duration),
-          filePath
-        });
-        
-        processed++;
-      } catch (err) {
-        console.error(`Error processing ${filePath}:`, err.message);
-        errors++;
-      }
+  // Transaction for faster inserts (must be fully synchronous in better-sqlite3)
+  const syncTransaction = db.transaction((data) => {
+    for (const item of data) {
+      existingPaths.delete(item.filePath); // Mark as still existing
+      insertStmt.run(item);
     }
   });
 
-  await syncTransaction(newFiles);
+  syncTransaction(parsedData);
 
   // Clean up deleted files from DB
   if (existingPaths.size > 0) {
