@@ -40,6 +40,12 @@ export async function slskdDownload(username, filename, size) {
   return response.json();
 }
 
+export async function fetchSlskdDownloads() {
+  const response = await fetch(`${API_URL}/slskd/downloads`);
+  if (!response.ok) throw new Error('Failed to fetch slskd downloads');
+  return response.json();
+}
+
 export function getStreamUrl(id) {
   return `${API_URL}/stream/${id}`;
 }

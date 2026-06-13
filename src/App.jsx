@@ -4,6 +4,7 @@ import Library from './pages/Library';
 import Browse from './pages/Browse';
 import Search from './pages/Search';
 import PlaylistDetail from './pages/PlaylistDetail';
+import Downloads from './pages/Downloads';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="library" element={<Library />} />
           <Route path="browse" element={<Browse />} />
           <Route path="search" element={<Search />} />
+          <Route path="downloads" element={<Downloads />} />
           <Route path="playlist/:id" element={<PlaylistDetail />} />
         </Route>
       </Routes>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Library, Search, PlusCircle, Music } from 'lucide-react';
+import { Home, Library, Search, PlusCircle, Music, DownloadCloud } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import CreatePlaylistModal from '../CreatePlaylistModal';
 
@@ -16,6 +16,7 @@ export default function NavRail() {
     { name: 'Browse', path: '/browse', icon: Home },
     { name: 'Library', path: '/library', icon: Library },
     { name: 'Search', path: '/search', icon: Search },
+    { name: 'Downloads', path: '/downloads', icon: DownloadCloud },
   ];
 
   return (

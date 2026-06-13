@@ -89,6 +89,15 @@ app.post('/api/slskd/download', async (req, res) => {
   }
 });
 
+app.get('/api/slskd/downloads', async (req, res) => {
+  try {
+    const results = await slskd.getDownloads();
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API: Sync music folder
 app.post('/api/sync', async (req, res) => {
   try {

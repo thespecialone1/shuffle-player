@@ -138,3 +138,20 @@ export async function queueDownload(username, filename, size) {
 
   return { success: true, message: text || "Download queued successfully" };
 }
+
+export async function getDownloads() {
+  const token = await getToken();
+  
+  const response = await fetch(`${SLSKD_URL}/transfers/downloads`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch downloads: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data;
+}
