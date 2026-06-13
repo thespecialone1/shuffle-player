@@ -5,7 +5,7 @@ import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 
 export default function NowPlaying() {
-  const { currentTrack, isPlaying, togglePlay, progress, duration, setProgress, setSeekTo, isNowPlayingFullscreen, setIsNowPlayingFullscreen } = usePlayerStore();
+  const { currentTrack, isPlaying, togglePlay, progress, duration, setProgress, setSeekTo, isNowPlayingFullscreen, closeNowPlaying } = usePlayerStore();
 
   const progressPercent = duration ? (progress / duration) * 100 : 0;
   
@@ -21,12 +21,15 @@ export default function NowPlaying() {
   return (
     <Drawer.Root 
       open={isNowPlayingFullscreen} 
-      onOpenChange={setIsNowPlayingFullscreen}
+      onOpenChange={(open) => !open && closeNowPlaying()}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity" />
         <Drawer.Content className="bg-[var(--color-surface-0)] flex flex-col rounded-t-[32px] h-[95vh] fixed bottom-0 left-0 right-0 z-50 text-[var(--color-text-primary)] outline-none">
           
+          <Drawer.Title className="sr-only">Now Playing</Drawer.Title>
+          <Drawer.Description className="sr-only">Player controls</Drawer.Description>
+
           {/* Draggable Handle */}
           <div className="p-4 rounded-t-[32px] flex-shrink-0 flex items-center justify-center">
             <div className="w-12 h-1.5 rounded-full bg-[var(--color-text-secondary)]/30" />
@@ -44,9 +47,9 @@ export default function NowPlaying() {
               }}
             />
 
-            {/* Top Bar (Optional, can just be the handle, but let's keep the chevron for explicit tap) */}
+            {/* Top Bar */}
             <div className="absolute top-0 left-0 w-full px-6 py-2 flex justify-between items-center z-10">
-              <button onClick={() => setIsNowPlayingFullscreen(false)} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
+              <button onClick={closeNowPlaying} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
                 <ChevronDown size={28} />
               </button>
               <span className="text-xs uppercase tracking-widest font-semibold text-[var(--color-text-secondary)]">Now Playing</span>
