@@ -84,6 +84,29 @@ export async function addTrackToPlaylist(playlistId, trackId) {
   return response.json();
 }
 
+// Play History
+export async function recordPlay(id) {
+  await fetch(`${API_URL}/tracks/play/${id}`, { method: 'POST' });
+}
+
+export async function fetchRecentTracks() {
+  const response = await fetch(`${API_URL}/tracks/recent`);
+  if (!response.ok) throw new Error('Failed to fetch recent tracks');
+  return response.json();
+}
+
+export async function fetchMostPlayedTracks() {
+  const response = await fetch(`${API_URL}/tracks/most-played`);
+  if (!response.ok) throw new Error('Failed to fetch most played tracks');
+  return response.json();
+}
+
+export async function fetchNewestTracks() {
+  const response = await fetch(`${API_URL}/tracks/newest`);
+  if (!response.ok) throw new Error('Failed to fetch newest tracks');
+  return response.json();
+}
+
 // Lyrics
 
 export async function fetchLyrics(artistName, trackName) {
@@ -91,7 +114,7 @@ export async function fetchLyrics(artistName, trackName) {
     artist_name: artistName,
     track_name: trackName
   });
-  const response = await fetch(`https://lrclib.net/api/get?${params}`);
+  const response = await fetch(`${API_URL}/lyrics?${params}`);
   if (response.status === 404) return null; // No lyrics found
   if (!response.ok) throw new Error('Failed to fetch lyrics');
   return response.json();

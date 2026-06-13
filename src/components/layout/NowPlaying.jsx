@@ -7,6 +7,7 @@ import Lyrics from './Lyrics';
 
 export default function NowPlaying() {
   const { currentTrack, isPlaying, togglePlay, progress, duration, setProgress, setSeekTo, isNowPlayingFullscreen, closeNowPlaying } = usePlayerStore();
+  const [showLyrics, setShowLyrics] = React.useState(false);
 
   const progressPercent = duration ? (progress / duration) * 100 : 0;
   
@@ -54,20 +55,42 @@ export default function NowPlaying() {
                 <ChevronDown size={28} />
               </button>
               <span className="text-xs uppercase tracking-widest font-semibold text-[var(--color-text-secondary)]">Now Playing</span>
-              <div className="w-10" />
+              <button 
+                onClick={() => setShowLyrics(!showLyrics)} 
+                className={`p-2 rounded-full transition-colors cursor-pointer ${showLyrics ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.1)]' : 'text-[var(--color-text-secondary)] hover:bg-[rgba(255,255,255,0.1)]'}`}
+              >
+                <Mic2 size={22} />
+              </button>
             </div>
 
             {/* Content Container */}
             <div className="relative z-10 w-full max-w-md flex flex-col items-center mt-10">
               
-              {/* Album Art with Vinyl Spin when playing */}
-              <motion.div 
-                layoutId="now-playing-art"
-                className={`w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] mb-10 rounded-2xl shadow-2xl overflow-hidden ${isPlaying ? 'vinyl-spin rounded-full' : ''}`} 
-                style={{ boxShadow: '0 32px 64px rgba(0,0,0,0.5)' }}
-              >
-                <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-full h-full object-cover" />
-              </motion.div>
+              {/* Album Art or Lyrics */}
+              <div className="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] mb-10 relative">
+                {showLyrics ? (
+                  <motion.div 
+                    initial={{ opacity: 0, rotateY: 90 }}
+                    animate={{ opacity: 1, rotateY: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full h-full rounded-2xl shadow-2xl overflow-hidden relative"
+                    style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 40%, var(--color-surface-0))' }}
+                  >
+                    <Lyrics compact={true} />
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    layoutId="now-playing-art"
+                    initial={{ opacity: 0, rotateY: -90 }}
+                    animate={{ opacity: 1, rotateY: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className={`w-full h-full rounded-2xl shadow-2xl overflow-hidden ${isPlaying ? 'vinyl-spin rounded-full' : ''}`} 
+                    style={{ boxShadow: '0 32px 64px rgba(0,0,0,0.5)' }}
+                  >
+                    <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-full h-full object-cover" />
+                  </motion.div>
+                )}
+              </div>
 
               {/* Metadata */}
               <div className="text-center w-full mb-8">
@@ -131,23 +154,6 @@ export default function NowPlaying() {
                   <Repeat size={24} />
                   {usePlayerStore.getState().repeatMode === 'one' && <span className="absolute top-1 right-1 text-[8px] font-bold text-[var(--color-surface-0)] bg-[var(--color-accent)] rounded-full w-3 h-3 flex items-center justify-center">1</span>}
                 </motion.button>
-              </div>
-            </div>
-
-            {/* Mobile Lyrics Card */}
-            <div className="w-full max-w-md mt-24 mb-16 px-2 sm:px-0 relative z-10">
-              <div 
-                className="w-full h-[400px] rounded-3xl overflow-hidden shadow-2xl relative"
-                style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 40%, var(--color-surface-0))' }}
-              >
-                {/* Lyrics Header */}
-                <div className="absolute top-0 left-0 w-full p-4 flex items-center justify-between z-20 backdrop-blur-md bg-black/10">
-                  <span className="font-bold text-white uppercase tracking-wider text-sm flex items-center gap-2">
-                    <Mic2 size={16} /> Lyrics
-                  </span>
-                </div>
-                {/* Lyrics Content */}
-                <Lyrics compact={true} />
               </div>
             </div>
 

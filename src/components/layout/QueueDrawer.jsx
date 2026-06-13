@@ -4,7 +4,20 @@ import { usePlayerStore } from '../../store/usePlayerStore';
 import { Reorder } from 'framer-motion';
 
 export default function QueueDrawer() {
-  const { isQueueOpen, toggleQueue, queue, currentTrack, playTrack, reorderQueue } = usePlayerStore();
+  const { isQueueOpen, toggleQueue, queue, currentTrack, playTrack } = usePlayerStore();
+  const [localQueue, setLocalQueue] = React.useState(queue);
+
+  React.useEffect(() => {
+    setLocalQueue(queue);
+  }, [queue]);
+
+  const handleReorder = (newOrder) => {
+    setLocalQueue(newOrder);
+    // Debounce or sync to global store
+    const currentId = currentTrack?.id;
+    const newIndex = newOrder.findIndex(t => t.id === currentId);
+    usePlayerStore.setState({ queue: newOrder, queueIndex: newIndex !== -1 ? newIndex : usePlayerStore.getState().queueIndex });
+  };
 
   if (!isQueueOpen) return null;
 
@@ -18,33 +31,22 @@ export default function QueueDrawer() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-2 hide-scrollbar">
-        {queue.length === 0 ? (
+        {localQueue.length === 0 ? (
           <div className="p-4 text-center text-[var(--color-text-secondary)] text-sm">
             Your queue is empty.
           </div>
         ) : (
           <Reorder.Group 
             axis="y" 
-            values={queue} 
-            onReorder={(newOrder) => {
-              // framer-motion gives us the new array, but our store action `reorderQueue` takes startIndex, endIndex
-              // Actually, it's easier to just pass the new array to the store!
-              // Let's create a setQueue action that replaces the queue, or update reorderQueue to accept the new array.
-              // Wait, usePlayerStore.getState().setQueue replaces the whole queue but also changes queueIndex to 0 if not careful.
-              // I will just use a quick inline store update here since we only need to update the queue array!
-              const currentId = currentTrack?.id;
-              const newIndex = newOrder.findIndex(t => t.id === currentId);
-              usePlayerStore.setState({ queue: newOrder, queueIndex: newIndex !== -1 ? newIndex : usePlayerStore.getState().queueIndex });
-            }}
+            values={localQueue} 
+            onReorder={handleReorder}
             className="flex flex-col gap-1"
           >
-            {queue.map((track, idx) => {
+            {localQueue.map((track) => {
               const isPlaying = currentTrack?.id === track.id;
               return (
                 <Reorder.Item 
-                  key={`${track.id}-${idx}`} // framer-motion needs a unique key, but if we have duplicates, track.id is not unique.
-                  // However, if we use index in key, Reorder gets confused during drag.
-                  // It's better to use a truly unique id. If track doesn't have one, we use track.id + idx.
+                  key={track.queueId || track.id} // use queueId for perfect animations
                   value={track}
                   className={`group relative flex items-center gap-3 p-2 rounded-md hover:bg-[rgba(255,255,255,0.05)] transition-colors ${isPlaying ? 'bg-[rgba(255,255,255,0.03)] border-l-2 border-[var(--color-accent)]' : 'border-l-2 border-transparent'}`}
                 >

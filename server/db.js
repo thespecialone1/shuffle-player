@@ -55,7 +55,6 @@ db.exec(`
     VALUES (new.rowid, new.id, new.title, new.artist, new.album);
   END;
 
-  -- Playlists
   CREATE TABLE IF NOT EXISTS playlists (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -71,6 +70,24 @@ db.exec(`
     FOREIGN KEY (playlistId) REFERENCES playlists(id) ON DELETE CASCADE,
     FOREIGN KEY (trackId) REFERENCES tracks(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS lyrics (
+    artist TEXT NOT NULL,
+    title TEXT NOT NULL,
+    syncedLyrics TEXT,
+    plainLyrics TEXT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (artist, title)
+  );
 `);
+
+// Add new columns to tracks if they don't exist (SQLite doesn't support IF NOT EXISTS for ADD COLUMN)
+try {
+  db.exec('ALTER TABLE tracks ADD COLUMN playCount INTEGER DEFAULT 0');
+} catch (e) { /* ignore */ }
+
+try {
+  db.exec('ALTER TABLE tracks ADD COLUMN lastPlayed DATETIME');
+} catch (e) { /* ignore */ }
 
 export default db;

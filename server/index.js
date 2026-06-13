@@ -124,6 +124,15 @@ app.get('/api/tracks', (req, res) => {
   }
 });
 
+app.get('/api/tracks/newest', (req, res) => {
+  try {
+    const tracks = db.prepare('SELECT id, title, artist, album, duration, coverArt FROM tracks ORDER BY createdAt DESC LIMIT 8').all().map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
+    res.json(tracks);
+  } catch (error) {
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
 // API: Search (using FTS5)
 app.get('/api/search', (req, res) => {
   const query = req.query.q;
@@ -281,6 +290,100 @@ app.get('/api/stream/:id', (req, res) => {
   }
 });
 
+// Play History & Analytics API
+
+app.post('/api/tracks/play/:id', (req, res) => {
+  const { id } = req.params;
+  try {
+    db.prepare('UPDATE tracks SET playCount = playCount + 1, lastPlayed = CURRENT_TIMESTAMP WHERE id = ?').run(id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update play history' });
+  }
+});
+
+app.get('/api/tracks/recent', (req, res) => {
+  try {
+    const tracks = db.prepare('SELECT id, title, artist, album, duration, coverArt, lastPlayed FROM tracks WHERE lastPlayed IS NOT NULL ORDER BY lastPlayed DESC LIMIT 20').all().map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
+    res.json(tracks);
+  } catch (error) {
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/tracks/most-played', (req, res) => {
+  try {
+    const tracks = db.prepare('SELECT id, title, artist, album, duration, coverArt, playCount FROM tracks WHERE playCount > 0 ORDER BY playCount DESC LIMIT 20').all().map(r => ({ ...r, coverArt: r.coverArt || fallbackCover }));
+    res.json(tracks);
+  } catch (error) {
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// Lyrics API (with DB Caching)
+
+app.get('/api/lyrics', async (req, res) => {
+  const { artist_name, track_name } = req.query;
+  if (!artist_name || !track_name) return res.status(400).json({ error: 'Missing artist_name or track_name' });
+
+  try {
+    // 1. Check local DB
+    const cached = db.prepare('SELECT syncedLyrics, plainLyrics FROM lyrics WHERE artist = ? AND title = ?').get(artist_name, track_name);
+    if (cached) {
+      return res.json({ 
+        syncedLyrics: cached.syncedLyrics, 
+        plainLyrics: cached.plainLyrics,
+        source: 'local'
+      });
+    }
+
+    // 2. Fetch from lrclib
+    const params = new URLSearchParams({ artist_name, track_name });
+    const response = await fetch(`https://lrclib.net/api/get?${params}`);
+    
+    if (response.status === 404) {
+      return res.status(404).json({ error: 'Lyrics not found' });
+    }
+    
+    if (!response.ok) {
+      throw new Error('lrclib fetch failed');
+    }
+
+    const data = await response.json();
+    
+    // 3. Save to local DB
+    try {
+      db.prepare('INSERT OR REPLACE INTO lyrics (artist, title, syncedLyrics, plainLyrics) VALUES (?, ?, ?, ?)').run(
+        artist_name, 
+        track_name, 
+        data.syncedLyrics || null, 
+        data.plainLyrics || null
+      );
+    } catch (dbError) {
+      console.error('Failed to cache lyrics:', dbError);
+    }
+
+    res.json({
+      syncedLyrics: data.syncedLyrics,
+      plainLyrics: data.plainLyrics,
+      source: 'lrclib'
+    });
+  } catch (error) {
+    console.error('Lyrics API error:', error);
+    res.status(500).json({ error: 'Failed to fetch lyrics' });
+  }
+});
+// Serve built frontend in production
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  // Catch-all for API 404s if not serving frontend
+  app.use((req, res) => res.status(404).send('API route not found or Frontend not built.'));
+}
 app.listen(PORT, () => {
   console.log(`Shuffle backend running on http://localhost:${PORT}`);
 });

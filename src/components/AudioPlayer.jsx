@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Vibrant } from 'node-vibrant/browser';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { recordPlay } from '../lib/api';
 
 export default function AudioPlayer() {
   const audioRef = useRef(null);
@@ -58,6 +59,9 @@ export default function AudioPlayer() {
 
   useEffect(() => {
     if (currentTrack) {
+      // Record play history
+      recordPlay(currentTrack.id).catch(console.error);
+      
       // Extract vibrant color
       try {
         new Vibrant(currentTrack.coverArt)

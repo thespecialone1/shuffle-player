@@ -7,6 +7,7 @@ import NowPlaying from './NowPlaying';
 import QueueDrawer from './QueueDrawer';
 import AudioPlayer from '../AudioPlayer';
 import LyricsView from './LyricsView';
+import NowPlayingSidebar from './NowPlayingSidebar';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function AppShell() {
@@ -40,6 +41,9 @@ export default function AppShell() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Desktop Right Sidebar */}
+      <NowPlayingSidebar />
 
       {/* Slide-out Queue */}
       <QueueDrawer />

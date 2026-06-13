@@ -39,7 +39,7 @@ export const usePlayerStore = create((set, get) => ({
     isNowPlayingFullscreen: false 
   }),
   setQueue: (tracks, startIndex = 0) => set((state) => {
-    let newQueue = [...tracks];
+    let newQueue = tracks.map(t => ({ ...t, queueId: crypto.randomUUID() }));
     let newIndex = startIndex;
     if (state.isShuffle) {
       const current = newQueue[startIndex];
@@ -54,7 +54,7 @@ export const usePlayerStore = create((set, get) => ({
     };
   }),
   addToQueue: (track) => set((state) => ({
-    queue: [...state.queue, track],
+    queue: [...state.queue, { ...track, queueId: crypto.randomUUID() }],
     // if queue was empty, maybe we should auto-play? Let's just add for now.
   })),
   play: () => set({ isPlaying: true }),
@@ -116,8 +116,14 @@ export const usePlayerStore = create((set, get) => ({
 
   // Queue and Now Playing toggles
   toggleQueue: () => set((state) => ({ isQueueOpen: !state.isQueueOpen })),
+  
+  isNowPlayingFullscreen: false, // For mobile drawer
   toggleNowPlaying: () => set((state) => ({ isNowPlayingFullscreen: !state.isNowPlayingFullscreen })),
   closeNowPlaying: () => set({ isNowPlayingFullscreen: false }),
+
+  isSidebarOpen: false, // For desktop right sidebar
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  closeSidebar: () => set({ isSidebarOpen: false }),
   
   // Drag and Drop Queue
   reorderQueue: (startIndex, endIndex) => set((state) => {

@@ -29,7 +29,13 @@ export default function PlayerBar() {
       </div>
 
       {/* Info */}
-      <div className="flex items-center gap-3 w-[45%] sm:w-1/3 min-w-0 cursor-pointer" onClick={toggleNowPlaying}>
+      <div className="flex items-center gap-3 w-[45%] sm:w-1/3 min-w-0 cursor-pointer" onClick={(e) => {
+        if (window.innerWidth >= 1024) {
+          usePlayerStore.getState().toggleSidebar();
+        } else {
+          usePlayerStore.getState().toggleNowPlaying();
+        }
+      }}>
          {currentTrack ? (
            <>
             <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-12 h-12 sm:w-14 sm:h-14 rounded bg-[var(--color-surface-2)] object-cover shadow-md" />
@@ -97,7 +103,16 @@ export default function PlayerBar() {
         <button onClick={toggleQueue} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer hidden sm:block">
           <ListMusic size={20} />
         </button>
-        <button onClick={toggleNowPlaying} className="hidden sm:block text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer">
+        <button 
+          onClick={() => {
+            if (window.innerWidth >= 1024) {
+              usePlayerStore.getState().toggleSidebar();
+            } else {
+              usePlayerStore.getState().toggleNowPlaying();
+            }
+          }} 
+          className="hidden sm:block text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+        >
           <Maximize2 size={18} />
         </button>
       </div>
