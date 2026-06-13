@@ -135,7 +135,7 @@ export default function NowPlaying() {
             </div>
 
             {/* Mobile Lyrics Card */}
-            <div className="w-full max-w-md mt-12 mb-8 px-2 sm:px-0 relative z-10">
+            <div className="w-full max-w-md mt-24 mb-16 px-2 sm:px-0 relative z-10">
               <div 
                 className="w-full h-[400px] rounded-3xl overflow-hidden shadow-2xl relative"
                 style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 40%, var(--color-surface-0))' }}

@@ -14,6 +14,11 @@ export default function AppShell() {
   const location = useLocation();
   const outlet = useOutlet();
 
+  React.useEffect(() => {
+    // Close lyrics when navigating between pages (e.g., clicking Browse or Library)
+    usePlayerStore.getState().closeLyrics();
+  }, [location.pathname]);
+
   return (
     <div className="flex h-[100dvh] w-full flex-col sm:flex-row bg-[var(--color-surface-0)] text-[var(--color-text-primary)] overflow-hidden">
       {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}

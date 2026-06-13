@@ -63,16 +63,6 @@ export default function Lyrics({ compact = false }) {
     loadLyrics();
   }, [currentTrack, lyricsCache, setLyricsCache]);
 
-  // Auto-scroll to active line
-  useEffect(() => {
-    if (activeLineRef.current && containerRef.current) {
-      activeLineRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }
-  }, [progress, lyricsData]);
-
   if (!currentTrack) return null;
 
   // Determine active line index
@@ -86,6 +76,16 @@ export default function Lyrics({ compact = false }) {
       }
     }
   }
+
+  // Auto-scroll to active line
+  useEffect(() => {
+    if (activeLineRef.current && containerRef.current) {
+      activeLineRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, [activeIndex, lyricsData]);
 
   if (loading) {
     return (

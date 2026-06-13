@@ -136,6 +136,7 @@ export const usePlayerStore = create((set, get) => ({
   isLyricsOpen: false,
   lyricsCache: {}, // { 'artist-title': lyricsData }
   toggleLyrics: () => set((state) => ({ isLyricsOpen: !state.isLyricsOpen })),
+  closeLyrics: () => set({ isLyricsOpen: false }),
   setLyricsCache: (key, data) => set((state) => ({
     lyricsCache: { ...state.lyricsCache, [key]: data }
   })),
