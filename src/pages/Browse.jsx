@@ -8,6 +8,8 @@ export default function Browse() {
   const [tracks, setTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [featuredTrack, setFeaturedTrack] = useState(null);
+
   useEffect(() => {
     document.documentElement.classList.add('page-active');
     loadTracks();
@@ -22,15 +24,15 @@ export default function Browse() {
         audioUrl: getStreamUrl(t.id)
       }));
       setTracks(mappedTracks);
+      if (mappedTracks.length > 0) {
+        setFeaturedTrack(mappedTracks[Math.floor(Math.random() * Math.min(10, mappedTracks.length))]);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
-
-  // Pick a random track for the hero banner, or the first one
-  const featuredTrack = tracks.length > 0 ? tracks[Math.floor(Math.random() * Math.min(10, tracks.length))] : null;
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -44,15 +46,15 @@ export default function Browse() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-0)] via-black/50 to-transparent" />
           
-          <div className="relative z-10 w-full flex justify-between items-end">
-            <div>
+          <div className="relative z-10 w-full flex justify-between items-end gap-4">
+            <div className="min-w-0 flex-1">
               <span className="text-xs font-bold tracking-widest uppercase text-[var(--color-accent)] mb-2 block">Featured Song</span>
-              <h1 className="text-4xl sm:text-5xl font-display font-bold text-white mb-2 text-ellipsis-1">{featuredTrack.title}</h1>
-              <p className="text-lg text-[var(--color-text-secondary)]">{featuredTrack.artist}</p>
+              <h1 className="text-4xl sm:text-5xl font-display font-bold text-white mb-2 truncate">{featuredTrack.title}</h1>
+              <p className="text-lg text-[var(--color-text-secondary)] truncate">{featuredTrack.artist}</p>
             </div>
             <button 
               onClick={() => setQueue(tracks, tracks.findIndex(t => t.id === featuredTrack.id))}
-              className="w-14 h-14 rounded-full bg-[var(--color-accent)] text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
+              className="w-14 h-14 shrink-0 rounded-full bg-[var(--color-accent)] text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
             >
               <Play size={24} fill="currentColor" className="ml-1" />
             </button>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { useLocation, useOutlet } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import NavRail from './NavRail';
 import PlayerBar from './PlayerBar';
 import NowPlaying from './NowPlaying';
@@ -9,20 +10,28 @@ import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function AppShell() {
   const isNowPlayingFullscreen = usePlayerStore(state => state.isNowPlayingFullscreen);
+  const location = useLocation();
+  const outlet = useOutlet();
 
   return (
     <div className="flex h-[100dvh] w-full flex-col sm:flex-row bg-[var(--color-surface-0)] text-[var(--color-text-primary)] overflow-hidden">
-      {/* Nav Rail on the left (desktop) or top/hidden (mobile, but we handle it via flex order/position) */}
-      {/* Wait, standard App Shell has Nav Rail on left, Player Bar at bottom. Main content fills the rest. */}
-      {/* On mobile, Nav Rail becomes a bottom tab bar just ABOVE the mini-player, or we can make Player Bar fixed at bottom and Nav Rail fixed above it. */}
-      {/* For simplicity, let's make a grid or flex. flex-col on mobile, flex-row on desktop. */}
+      {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
       <NavRail />
       
       {/* Main Content Area */}
-      <main className="flex-1 relative overflow-y-auto pb-[160px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)]">
-        <div className="mx-auto max-w-7xl p-4 sm:p-8">
-          <Outlet />
-        </div>
+      <main className="flex-1 relative overflow-y-auto pb-[160px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="mx-auto max-w-7xl p-4 sm:p-8 min-h-full"
+          >
+            {outlet}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Slide-out Queue */}
@@ -31,8 +40,8 @@ export default function AppShell() {
       {/* Fixed Player Bar at the bottom */}
       <PlayerBar />
 
-      {/* Full Screen Now Playing Overlay */}
-      {isNowPlayingFullscreen && <NowPlaying />}
+      {/* Full Screen Now Playing Drawer */}
+      <NowPlaying />
 
       {/* Invisible Audio Engine */}
       <AudioPlayer />
