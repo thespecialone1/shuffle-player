@@ -83,3 +83,16 @@ export async function addTrackToPlaylist(playlistId, trackId) {
   if (!response.ok) throw new Error('Failed to add track to playlist');
   return response.json();
 }
+
+// Lyrics
+
+export async function fetchLyrics(artistName, trackName) {
+  const params = new URLSearchParams({
+    artist_name: artistName,
+    track_name: trackName
+  });
+  const response = await fetch(`https://lrclib.net/api/get?${params}`);
+  if (response.status === 404) return null; // No lyrics found
+  if (!response.ok) throw new Error('Failed to fetch lyrics');
+  return response.json();
+}

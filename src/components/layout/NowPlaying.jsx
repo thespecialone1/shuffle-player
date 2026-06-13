@@ -1,8 +1,9 @@
 import React from 'react';
-import { ChevronDown, Play, Pause, SkipForward, SkipBack, Shuffle, Repeat } from 'lucide-react';
+import { ChevronDown, Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, Mic2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
+import Lyrics from './Lyrics';
 
 export default function NowPlaying() {
   const { currentTrack, isPlaying, togglePlay, progress, duration, setProgress, setSeekTo, isNowPlayingFullscreen, closeNowPlaying } = usePlayerStore();
@@ -132,6 +133,24 @@ export default function NowPlaying() {
                 </motion.button>
               </div>
             </div>
+
+            {/* Mobile Lyrics Card */}
+            <div className="w-full max-w-md mt-12 mb-8 px-2 sm:px-0 relative z-10">
+              <div 
+                className="w-full h-[400px] rounded-3xl overflow-hidden shadow-2xl relative"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 40%, var(--color-surface-0))' }}
+              >
+                {/* Lyrics Header */}
+                <div className="absolute top-0 left-0 w-full p-4 flex items-center justify-between z-20 backdrop-blur-md bg-black/10">
+                  <span className="font-bold text-white uppercase tracking-wider text-sm flex items-center gap-2">
+                    <Mic2 size={16} /> Lyrics
+                  </span>
+                </div>
+                {/* Lyrics Content */}
+                <Lyrics compact={true} />
+              </div>
+            </div>
+
           </div>
         </Drawer.Content>
       </Drawer.Portal>

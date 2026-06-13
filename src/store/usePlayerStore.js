@@ -114,7 +114,30 @@ export const usePlayerStore = create((set, get) => ({
     document.documentElement.style.setProperty('--art-color', color);
   },
 
+  // Queue and Now Playing toggles
   toggleQueue: () => set((state) => ({ isQueueOpen: !state.isQueueOpen })),
   toggleNowPlaying: () => set((state) => ({ isNowPlayingFullscreen: !state.isNowPlayingFullscreen })),
   closeNowPlaying: () => set({ isNowPlayingFullscreen: false }),
+  
+  // Drag and Drop Queue
+  reorderQueue: (startIndex, endIndex) => set((state) => {
+    const newQueue = Array.from(state.queue);
+    const [removed] = newQueue.splice(startIndex, 1);
+    newQueue.splice(endIndex, 0, removed);
+    
+    // Update queueIndex if the current track moved or if elements shifted around it
+    const currentTrackId = state.currentTrack?.id;
+    const newIndex = newQueue.findIndex(t => t.id === currentTrackId);
+    
+    return { queue: newQueue, queueIndex: newIndex !== -1 ? newIndex : state.queueIndex };
+  }),
+
+  // Lyrics State
+  isLyricsOpen: false,
+  lyricsCache: {}, // { 'artist-title': lyricsData }
+  toggleLyrics: () => set((state) => ({ isLyricsOpen: !state.isLyricsOpen })),
+  setLyricsCache: (key, data) => set((state) => ({
+    lyricsCache: { ...state.lyricsCache, [key]: data }
+  })),
+
 }));

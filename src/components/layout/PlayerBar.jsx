@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat, Mic2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function PlayerBar() {
@@ -88,6 +88,12 @@ export default function PlayerBar() {
             style={{ backgroundSize: `${usePlayerStore.getState().volume * 100}% 100%`, backgroundImage: 'linear-gradient(var(--color-text-primary), var(--color-text-primary))', backgroundRepeat: 'no-repeat' }}
           />
         </div>
+        <button 
+          onClick={() => usePlayerStore.getState().toggleLyrics()} 
+          className={`hidden sm:block transition-colors cursor-pointer ${usePlayerStore.getState().isLyricsOpen ? 'text-[var(--color-accent)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+        >
+          <Mic2 size={18} />
+        </button>
         <button onClick={toggleQueue} className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer hidden sm:block">
           <ListMusic size={20} />
         </button>

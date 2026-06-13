@@ -6,6 +6,7 @@ import PlayerBar from './PlayerBar';
 import NowPlaying from './NowPlaying';
 import QueueDrawer from './QueueDrawer';
 import AudioPlayer from '../AudioPlayer';
+import LyricsView from './LyricsView';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function AppShell() {
@@ -20,6 +21,7 @@ export default function AppShell() {
       
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-y-auto pb-[160px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar">
+        <LyricsView />
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
