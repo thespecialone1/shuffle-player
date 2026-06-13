@@ -18,6 +18,28 @@ export async function syncMusic() {
   return response.json();
 }
 
+export async function slskdSearch(query) {
+  const response = await fetch(`${API_URL}/slskd/search?q=${encodeURIComponent(query)}`);
+  if (!response.ok) throw new Error('Failed to initiate slskd search');
+  return response.json();
+}
+
+export async function getSlskdResults(id) {
+  const response = await fetch(`${API_URL}/slskd/results?id=${encodeURIComponent(id)}`);
+  if (!response.ok) throw new Error('Failed to fetch slskd results');
+  return response.json();
+}
+
+export async function slskdDownload(username, filename, size) {
+  const response = await fetch(`${API_URL}/slskd/download`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, filename, size })
+  });
+  if (!response.ok) throw new Error('Failed to queue download');
+  return response.json();
+}
+
 export function getStreamUrl(id) {
   return `${API_URL}/stream/${id}`;
 }

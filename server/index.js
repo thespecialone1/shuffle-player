@@ -5,8 +5,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import db from './db.js';
 import { syncMusicFolder } from './sync.js';
+import * as slskd from './slskd.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -35,11 +37,7 @@ app.get('/api/debug-covers', (req, res) => {
   try {
     const stmt = db.prepare('SELECT id, title, coverArt, filePath FROM tracks');
     const tracks = stmt.all();
-    const coversDir = path.join(__dirname, '../public/covers');
-    let coversOnDisk = [];
-    try {
-      coversOnDisk = fs.readdirSync(coversDir);
-    } catch(e) {}
+    const coversOnDisk = fs.existsSync(coversDir) ? fs.readdirSync(coversDir) : [];
     
     res.json({
       tracks: tracks.map(t => ({
@@ -52,6 +50,40 @@ app.get('/api/debug-covers', (req, res) => {
         contents: coversOnDisk
       }
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// --- Slskd API Routes ---
+app.get('/api/slskd/search', async (req, res) => {
+  try {
+    const query = req.query.q;
+    if (!query) return res.status(400).json({ error: 'Query is required' });
+    const id = await slskd.initiateSearch(query);
+    res.json({ id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/slskd/results', async (req, res) => {
+  try {
+    const id = req.query.id;
+    if (!id) return res.status(400).json({ error: 'Search ID is required' });
+    const results = await slskd.getSearchResults(id);
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/slskd/download', async (req, res) => {
+  try {
+    const { username, filename, size } = req.body;
+    if (!username || !filename || !size) return res.status(400).json({ error: 'Missing required parameters' });
+    const result = await slskd.queueDownload(username, filename, size);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
