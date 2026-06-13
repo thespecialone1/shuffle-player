@@ -46,8 +46,7 @@ export async function initiateSearch(query) {
     },
     body: JSON.stringify({
       id: searchId,
-      searchText: query,
-      searchTimeout: 10 // Slskd handles the timeout
+      searchText: query
     })
   });
 
