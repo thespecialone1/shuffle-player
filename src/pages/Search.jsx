@@ -38,8 +38,13 @@ export default function Search() {
     if (slskdSearchId) {
       interval = setInterval(async () => {
         try {
-          const newResults = await getSlskdResults(slskdSearchId);
-          setSlskdResults(newResults);
+          const data = await getSlskdResults(slskdSearchId);
+          setSlskdResults(data.results);
+          setIsSlskdSearching(data.state === 'InProgress' || data.state === 'Queued');
+          
+          if (data.state === 'Completed' || data.state === 'Cancelled' || data.state === 'Faulted') {
+            clearInterval(interval);
+          }
         } catch (e) {
           console.error('Failed to poll slskd results', e);
         }
@@ -53,6 +58,7 @@ export default function Search() {
       setResults([]);
       setSlskdResults([]);
       setSlskdSearchId(null);
+      setIsSlskdSearching(false);
       return;
     }
 
@@ -80,9 +86,6 @@ export default function Search() {
       console.error("Failed to start slskd search", err);
       setIsSlskdSearching(false);
     }
-
-    // Stop slskd searching visual indicator after 15s to not spin forever
-    setTimeout(() => setIsSlskdSearching(false), 15000);
   };
 
   const handleSearch = (e) => {

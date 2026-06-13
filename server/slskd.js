@@ -46,7 +46,8 @@ export async function initiateSearch(query) {
     },
     body: JSON.stringify({
       id: searchId,
-      searchText: query
+      searchText: query,
+      searchTimeout: 120000 // 2 minutes in milliseconds
     })
   });
 
@@ -59,6 +60,16 @@ export async function initiateSearch(query) {
 
 export async function getSearchResults(searchId) {
   const token = await getToken();
+  
+  const statusRes = await fetch(`${SLSKD_URL}/searches/${searchId}`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!statusRes.ok) {
+    throw new Error(`Failed to fetch search status: ${statusRes.statusText}`);
+  }
+  const statusData = await statusRes.json();
+  const searchState = statusData.state;
+
   const response = await fetch(`${SLSKD_URL}/searches/${searchId}/responses`, {
     headers: {
       'Authorization': `Bearer ${token}`
@@ -98,7 +109,10 @@ export async function getSearchResults(searchId) {
     return b.uploadSpeed - a.uploadSpeed;
   });
 
-  return results.slice(0, 100); // Return top 100 to avoid overwhelming UI
+  return {
+    state: searchState,
+    results: results.slice(0, 100)
+  };
 }
 
 export async function queueDownload(username, filename, size) {
