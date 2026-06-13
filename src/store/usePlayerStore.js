@@ -39,7 +39,7 @@ export const usePlayerStore = create((set, get) => ({
     isNowPlayingFullscreen: false 
   }),
   setQueue: (tracks, startIndex = 0) => set((state) => {
-    let newQueue = tracks.map(t => ({ ...t, queueId: crypto.randomUUID() }));
+    let newQueue = tracks.map(t => ({ ...t, queueId: Math.random().toString(36).substring(2, 10) + Date.now().toString(36) }));
     let newIndex = startIndex;
     if (state.isShuffle) {
       const current = newQueue[startIndex];
@@ -54,7 +54,7 @@ export const usePlayerStore = create((set, get) => ({
     };
   }),
   addToQueue: (track) => set((state) => ({
-    queue: [...state.queue, { ...track, queueId: crypto.randomUUID() }],
+    queue: [...state.queue, { ...track, queueId: Math.random().toString(36).substring(2, 10) + Date.now().toString(36) }],
     // if queue was empty, maybe we should auto-play? Let's just add for now.
   })),
   play: () => set({ isPlaying: true }),
