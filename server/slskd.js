@@ -33,7 +33,7 @@ async function getToken() {
     throw err;
   }
 }
-}
+
 export async function initiateSearch(query) {
   const token = await getToken();
   const searchId = crypto.randomUUID();
