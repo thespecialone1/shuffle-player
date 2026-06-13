@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const SLSKD_URL = 'http://localhost:5030/api/v0';
+const SLSKD_URL = 'http://127.0.0.1:5030/api/v0';
 const SLSKD_USERNAME = 'slskd';
 const SLSKD_PASSWORD = 'slskd';
 
@@ -12,23 +12,28 @@ async function getToken() {
     return cachedToken;
   }
 
-  const response = await fetch(`${SLSKD_URL}/session`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: SLSKD_USERNAME, password: SLSKD_PASSWORD })
-  });
+  try {
+    const response = await fetch(`${SLSKD_URL}/session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: SLSKD_USERNAME, password: SLSKD_PASSWORD })
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to authenticate with slskd: ${response.statusText}`);
+    if (!response.ok) {
+      const txt = await response.text();
+      throw new Error(`Failed to authenticate with slskd (${response.status}): ${txt}`);
+    }
+
+    const data = await response.json();
+    cachedToken = data.token;
+    tokenExpiresAt = (data.expires * 1000) - 300000; 
+    return cachedToken;
+  } catch (err) {
+    console.error("Slskd Auth Error:", err);
+    throw err;
   }
-
-  const data = await response.json();
-  cachedToken = data.token;
-  // Expire 5 minutes before actual expiry just to be safe
-  tokenExpiresAt = (data.expires * 1000) - 300000; 
-  return cachedToken;
 }
-
+}
 export async function initiateSearch(query) {
   const token = await getToken();
   const searchId = crypto.randomUUID();
