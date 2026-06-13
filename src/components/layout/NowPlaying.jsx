@@ -22,11 +22,10 @@ export default function NowPlaying() {
     <Drawer.Root 
       open={isNowPlayingFullscreen} 
       onOpenChange={setIsNowPlayingFullscreen}
-      shouldScaleBackground
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity" />
-        <Drawer.Content className="bg-[var(--color-surface-0)] flex flex-col rounded-t-[32px] h-[96dvh] mt-24 fixed bottom-0 left-0 right-0 z-50 text-[var(--color-text-primary)] outline-none">
+        <Drawer.Content className="bg-[var(--color-surface-0)] flex flex-col rounded-t-[32px] h-[95vh] fixed bottom-0 left-0 right-0 z-50 text-[var(--color-text-primary)] outline-none">
           
           {/* Draggable Handle */}
           <div className="p-4 rounded-t-[32px] flex-shrink-0 flex items-center justify-center">
