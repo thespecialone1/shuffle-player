@@ -32,15 +32,21 @@ export default function PlayerBar() {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 w-full z-40 px-2 sm:px-4 hover-glow backdrop-blur-xl"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl"
+      style={{ paddingBottom: 'max(env(safe-area-inset-bottom) - 12px, 0px)' }}
     >
-      <div className="w-full h-auto min-h-[56px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-t-xl sm:rounded-none overflow-hidden pb-1 sm:pb-0">
+      <div className="w-full h-auto min-h-[56px] sm:h-[88px] bg-[var(--color-surface-0)] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-none overflow-hidden pb-0">
         
+        {/* Ambient background that fills the entire bar securely */}
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{ background: `linear-gradient(to top, var(--color-surface-0), var(--art-color))` }}
+        />
+
         {/* Scrubber - Absolute top of bar */}
         <Scrubber />
 
-        <div className="flex w-full items-center justify-between sm:justify-start px-2 pt-2 sm:pt-0">
+        <div className="flex w-full items-center justify-between sm:justify-start px-3 pt-2 sm:pt-0 relative z-10">
           {/* Info */}
           <div className="flex items-center gap-3 w-[60%] sm:w-1/3 min-w-0 cursor-pointer" onClick={(e) => {
             if (window.innerWidth >= 1024) {
@@ -133,7 +139,7 @@ export default function PlayerBar() {
       </div>
 
       {/* Mini Lyrics below the controls row on mobile */}
-      <div className="sm:hidden w-full flex-shrink-0 z-10 pointer-events-none mt-1 px-2 pb-0.5 overflow-hidden">
+      <div className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 pb-0.5 overflow-hidden">
         <MiniLyrics />
       </div>
 

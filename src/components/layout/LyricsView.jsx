@@ -27,22 +27,8 @@ export default function LyricsView() {
           }} 
         />
 
-        {/* Left side: Song Details */}
-        <div className="w-1/3 min-w-[300px] h-full flex flex-col justify-center items-end p-12 lg:p-24 relative z-10">
-          <div className="w-full max-w-[400px]">
-            <motion.img 
-              layoutId="lyrics-art"
-              src={currentTrack?.coverArt} 
-              alt={currentTrack?.title} 
-              className="w-full aspect-square object-cover rounded-xl shadow-2xl mb-8"
-            />
-            <h1 className="text-4xl lg:text-5xl font-display font-bold text-white mb-2">{currentTrack?.title}</h1>
-            <p className="text-xl lg:text-2xl text-white/60">{currentTrack?.artist}</p>
-          </div>
-        </div>
-
-        {/* Right side: Lyrics Container */}
-        <div className="flex-1 h-full relative z-10">
+        {/* Full width Lyrics Container */}
+        <div className="w-full h-full relative z-10 flex items-center justify-center">
           <Lyrics />
         </div>
       </motion.div>

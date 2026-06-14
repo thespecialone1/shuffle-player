@@ -38,7 +38,14 @@ export default function NowPlayingSidebar() {
                 {isLyricsOpen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
             </div>
-            <Lyrics compact={true} />
+            {!isLyricsOpen ? (
+              <Lyrics compact={true} />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full w-full text-[var(--color-text-secondary)] opacity-50 px-6 text-center">
+                <Minimize2 size={32} className="mb-4 opacity-50" />
+                <p>Lyrics are expanded in the main view.</p>
+              </div>
+            )}
           </div>
         </div>
       ) : (

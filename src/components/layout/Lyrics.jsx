@@ -125,7 +125,7 @@ export default function Lyrics({ compact = false }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: isActive ? 1 : (isPassed ? 0.3 : 0.5), y: 0, scale: isActive ? 1.05 : 1 }}
                 transition={{ duration: 0.3 }}
-                className={`text-[24px] sm:text-[40px] md:text-[48px] font-bold font-display leading-tight transition-all duration-300 origin-left cursor-pointer hover:opacity-100 ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)] mix-blend-overlay'}`}
+                className={`${compact ? 'text-[18px] sm:text-[22px]' : 'text-[24px] sm:text-[40px] md:text-[48px]'} font-bold font-display leading-tight transition-all duration-300 origin-left cursor-pointer hover:opacity-100 ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-primary)] mix-blend-overlay'}`}
                 onClick={() => usePlayerStore.getState().setSeekTo(line.time)}
               >
                 {line.text}

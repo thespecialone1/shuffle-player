@@ -51,8 +51,8 @@ export default function NowPlaying() {
 
             {/* Top Bar */}
             <div 
-              className="absolute top-0 left-0 w-full px-6 py-2 flex justify-between items-center z-10"
-              style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))' }}
+              className="absolute top-0 left-0 w-full px-6 pb-2 pt-2 flex justify-between items-center z-10"
+              style={{ paddingTop: 'env(safe-area-inset-top)' }}
             >
               <button onClick={closeNowPlaying} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
                 <ChevronDown size={28} />
@@ -67,7 +67,7 @@ export default function NowPlaying() {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 w-full max-w-md flex flex-col items-center mt-10">
+            <div className="relative z-10 w-full max-w-md flex flex-col items-center mt-20">
               
               {/* Album Art or Lyrics */}
               <div className="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] mb-10 relative">
