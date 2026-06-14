@@ -45,7 +45,7 @@ export default function MiniLyrics() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 1.05 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="text-[14px] sm:text-[15px] font-display font-bold text-[var(--color-text-primary)] text-center drop-shadow-lg px-2 leading-tight"
+          className="text-[16px] sm:text-[17px] font-display font-extrabold text-[var(--color-text-primary)] text-center drop-shadow-lg px-2 leading-tight"
           style={{
             display: '-webkit-box',
             WebkitLineClamp: 2,

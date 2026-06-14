@@ -73,7 +73,10 @@ export default function AppShell() {
       
       {/* Main Content Area */}
       <main 
-        className="flex-1 relative overflow-y-auto pb-[130px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar"
+        className="flex-1 relative overflow-y-auto pb-[130px] sm:pb-[88px] hide-scrollbar"
+        style={{
+          background: `linear-gradient(to bottom, transparent 0%, var(--color-surface-1) 10%, var(--color-surface-0) 100%)`
+        }}
       >
         <LyricsView />
         <AnimatePresence mode="wait">
