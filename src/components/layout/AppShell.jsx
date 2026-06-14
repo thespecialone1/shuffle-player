@@ -10,6 +10,32 @@ import LyricsView from './LyricsView';
 import NowPlayingSidebar from './NowPlayingSidebar';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
+const TopAura = ({ currentTrack, isPlaying }) => {
+  if (!currentTrack) return null;
+  
+  return (
+    <div className="fixed top-0 left-0 w-full h-32 z-30 pointer-events-none overflow-visible sm:hidden" style={{ height: 'calc(40px + env(safe-area-inset-top))' }}>
+      <motion.div 
+        animate={{ 
+          opacity: isPlaying ? [0.4, 0.8, 0.4] : 0,
+          scale: isPlaying ? [1, 1.05, 1] : 1,
+        }}
+        transition={{ 
+          duration: 3, 
+          repeat: Infinity,
+          ease: "easeInOut" 
+        }}
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[150px]"
+        style={{
+          background: `radial-gradient(ellipse at top, var(--art-color) 0%, transparent 70%)`,
+          filter: 'blur(30px)',
+          mixBlendMode: 'screen'
+        }}
+      />
+    </div>
+  );
+};
+
 export default function AppShell() {
   const isNowPlayingFullscreen = usePlayerStore(state => state.isNowPlayingFullscreen);
   const location = useLocation();
@@ -41,6 +67,9 @@ export default function AppShell() {
     >
       {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
       <NavRail />
+      
+      {/* Dynamic Island Aura Effect */}
+      <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
       
       {/* Main Content Area */}
       <main 

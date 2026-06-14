@@ -32,10 +32,10 @@ export default function PlayerBar() {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl"
-      style={{ paddingBottom: 'max(env(safe-area-inset-bottom) - 12px, 0px)' }}
+      className="fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl bg-[var(--color-surface-0)] border-t border-[var(--color-border-subtle)]"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <div className="w-full h-auto min-h-[56px] sm:h-[88px] bg-[var(--color-surface-0)] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-none overflow-hidden pb-0">
+      <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         
         {/* Ambient background that fills the entire bar securely */}
         <div 
@@ -46,7 +46,7 @@ export default function PlayerBar() {
         {/* Scrubber - Absolute top of bar */}
         <Scrubber />
 
-        <div className="flex w-full items-center justify-between sm:justify-start px-3 pt-2 sm:pt-0 relative z-10">
+        <div className="flex w-full items-center justify-between sm:justify-start px-4 pt-4 sm:pt-0 pb-1 relative z-10">
           {/* Info */}
           <div className="flex items-center gap-3 w-[60%] sm:w-1/3 min-w-0 cursor-pointer" onClick={(e) => {
             if (window.innerWidth >= 1024) {
