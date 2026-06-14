@@ -1,25 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { Vibrant } from 'node-vibrant/browser';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { recordPlay } from '../lib/api';
 
 export default function AudioPlayer() {
   const audioRef = useRef(null);
-  const { 
-    currentTrack, 
-    isPlaying, 
-    volume, 
-    isMuted, 
-    setDuration, 
-    setProgress, 
-    setDominantColor,
-    nextTrack,
-    pause,
-    play,
-    togglePlay,
-    seekTo,
-    setSeekTo
-  } = usePlayerStore();
+  const { currentTrack, isPlaying, volume, isMuted, setDuration, setProgress, setDominantColor, nextTrack, pause, play, togglePlay, seekTo, setSeekTo } = usePlayerStore(useShallow(state => ({ currentTrack: state.currentTrack, isPlaying: state.isPlaying, volume: state.volume, isMuted: state.isMuted, setDuration: state.setDuration, setProgress: state.setProgress, setDominantColor: state.setDominantColor, nextTrack: state.nextTrack, pause: state.pause, play: state.play, togglePlay: state.togglePlay, seekTo: state.seekTo, setSeekTo: state.setSeekTo })));
 
   useEffect(() => {
     if (seekTo !== null && audioRef.current) {

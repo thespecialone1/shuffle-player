@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { fetchRecentTracks, fetchMostPlayedTracks, fetchNewestTracks, getStreamUrl } from '../lib/api';
 
 export default function Browse() {
-  const { setQueue } = usePlayerStore();
+  const { setQueue } = usePlayerStore(useShallow(state => ({ setQueue: state.setQueue })));
   
   const [recentTracks, setRecentTracks] = useState([]);
   const [mostPlayed, setMostPlayed] = useState([]);

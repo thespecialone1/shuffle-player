@@ -1,10 +1,11 @@
 import React from 'react';
 import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat, Mic2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import MiniLyrics from '../player/MiniLyrics';
 
 const Scrubber = () => {
-  const { progress, duration, setProgress, setSeekTo } = usePlayerStore();
+  const { progress, duration, setProgress, setSeekTo } = usePlayerStore(useShallow(state => ({ progress: state.progress, duration: state.duration, setProgress: state.setProgress, setSeekTo: state.setSeekTo })));
   const progressPercent = duration > 0 ? (progress / duration) * 100 : 0;
   
   return (
@@ -49,8 +50,7 @@ export default function PlayerBar() {
   return (
     <div 
       ref={playerRef}
-      className="fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl bg-[var(--color-surface-0)] border-t border-[var(--color-border-subtle)]"
-      style={{ paddingBottom: 'max(env(safe-area-inset-bottom) - 8px, 0px)' }}
+      className="relative sm:fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl bg-[var(--color-surface-0)] sm:border-t border-[var(--color-border-subtle)]"
     >
       <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         
@@ -156,7 +156,10 @@ export default function PlayerBar() {
       </div>
 
       {/* Mini Lyrics below the controls row on mobile */}
-      <div className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 pb-0.5 overflow-hidden">
+      <div 
+        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 overflow-hidden"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 8px)' }}
+      >
         <MiniLyrics />
       </div>
 

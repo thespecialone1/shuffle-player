@@ -1,10 +1,11 @@
 import React from 'react';
 import { X, Play, GripVertical } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Reorder } from 'framer-motion';
 
 export default function QueueDrawer() {
-  const { isQueueOpen, toggleQueue, queue, currentTrack, playTrack } = usePlayerStore();
+  const { isQueueOpen, toggleQueue, queue, currentTrack, playTrack } = usePlayerStore(useShallow(state => ({ isQueueOpen: state.isQueueOpen, toggleQueue: state.toggleQueue, queue: state.queue, currentTrack: state.currentTrack, playTrack: state.playTrack })));
   const [localQueue, setLocalQueue] = React.useState(queue);
 
   React.useEffect(() => {

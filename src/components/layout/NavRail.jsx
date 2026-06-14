@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Home, Library, Search, PlusCircle, Music, DownloadCloud } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import CreatePlaylistModal from '../CreatePlaylistModal';
 
-export default function NavRail() {
-  const { playlists, loadPlaylists } = usePlayerStore();
+export default function NavRail({ className = '' }) {
+  const { playlists, loadPlaylists } = usePlayerStore(useShallow(state => ({ playlists: state.playlists, loadPlaylists: state.loadPlaylists })));
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const lastPathRef = useRef(null);
 
   useEffect(() => {
     loadPlaylists();
@@ -19,13 +22,23 @@ export default function NavRail() {
     { name: 'Downloads', path: '/downloads', icon: DownloadCloud },
   ];
 
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const navLink = element?.closest('a[data-path]');
+    if (navLink) {
+      const path = navLink.getAttribute('data-path');
+      if (lastPathRef.current !== path) {
+        lastPathRef.current = path;
+        navigate(path);
+      }
+    }
+  };
+
   return (
     <>
       <nav 
-        className="fixed sm:relative left-0 w-full sm:w-[64px] lg:w-[220px] h-[64px] sm:h-full bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300"
-        style={{
-          bottom: window.innerWidth < 640 ? 'var(--player-height, 90px)' : '0'
-        }}
+        className={`relative w-full sm:w-[64px] lg:w-[220px] h-[64px] sm:h-full bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300 ${className}`}
       >
         
         {/* Brand - desktop only */}
@@ -36,11 +49,15 @@ export default function NavRail() {
           <span className="font-display font-bold text-lg tracking-tight">Shuffle</span>
         </div>
 
-        <div className="flex sm:flex-col items-center lg:items-start justify-center sm:justify-start w-full gap-8 sm:gap-2 lg:gap-1">
+        <div 
+          className="flex sm:flex-col items-center lg:items-start justify-center sm:justify-start w-full gap-8 sm:gap-2 lg:gap-1"
+          onTouchMove={handleTouchMove}
+        >
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
+              data-path={item.path}
               className={({ isActive }) => 
                 `flex items-center justify-center sm:justify-start gap-4 px-3 py-3 w-auto sm:w-full rounded-lg transition-colors group ${
                   isActive ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.05)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[rgba(255,255,255,0.03)]'
@@ -49,7 +66,7 @@ export default function NavRail() {
             >
               {({ isActive }) => (
                 <>
-                  <item.icon size={24} strokeWidth={isActive ? 2.5 : 1.5} className="shrink-0" />
+                  <item.icon className="w-7 h-7 sm:w-6 sm:h-6 shrink-0" strokeWidth={isActive ? 2.5 : 1.5} />
                   <span className={`hidden lg:block font-medium text-sm ${isActive ? 'text-[var(--color-text-primary)]' : ''}`}>{item.name}</span>
                 </>
               )}

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { createPlaylist } from '../lib/api';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function CreatePlaylistModal({ onClose }) {
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { loadPlaylists } = usePlayerStore();
+  const { loadPlaylists } = usePlayerStore(useShallow(state => ({ loadPlaylists: state.loadPlaylists })));
 
   const handleSubmit = async (e) => {
     e.preventDefault();

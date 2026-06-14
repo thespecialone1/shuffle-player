@@ -66,17 +66,14 @@ export default function AppShell() {
       }}
     >
       {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
-      <NavRail />
+      <NavRail className="hidden sm:flex" />
       
       {/* Dynamic Island Aura Effect */}
       <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
       
       {/* Main Content Area */}
       <main 
-        className="flex-1 relative overflow-y-auto sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar"
-        style={{
-          paddingBottom: window.innerWidth < 640 ? 'calc(var(--player-height, 90px) + 64px)' : undefined
-        }}
+        className="flex-1 relative overflow-y-auto pb-[130px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar"
       >
         <LyricsView />
         <AnimatePresence mode="wait">
@@ -99,8 +96,16 @@ export default function AppShell() {
       {/* Slide-out Queue */}
       <QueueDrawer />
 
-      {/* Fixed Player Bar at the bottom */}
-      <PlayerBar />
+      {/* Desktop Player Bar */}
+      <div className="hidden sm:block">
+        <PlayerBar />
+      </div>
+
+      {/* Mobile Tab Bar & Player Stack */}
+      <div className="sm:hidden fixed bottom-0 left-0 w-full z-40 flex flex-col shadow-2xl">
+        <NavRail />
+        <PlayerBar />
+      </div>
 
       {/* Full Screen Now Playing Drawer */}
       <NowPlaying />

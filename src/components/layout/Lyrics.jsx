@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { fetchLyrics } from '../../lib/api';
 
 export default function Lyrics({ compact = false }) {
-  const { currentTrack, progress, lyricsCache, setLyricsCache } = usePlayerStore();
+  const { currentTrack, progress, lyricsCache, setLyricsCache } = usePlayerStore(useShallow(state => ({ currentTrack: state.currentTrack, progress: state.progress, lyricsCache: state.lyricsCache, setLyricsCache: state.setLyricsCache })));
   const [lyricsData, setLyricsData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);

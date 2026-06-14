@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import Lyrics from './Lyrics';
 
 export default function LyricsView() {
-  const { isLyricsOpen, currentTrack } = usePlayerStore();
+  const { isLyricsOpen, currentTrack } = usePlayerStore(useShallow(state => ({ isLyricsOpen: state.isLyricsOpen, currentTrack: state.currentTrack })));
 
   if (!isLyricsOpen) return null;
 

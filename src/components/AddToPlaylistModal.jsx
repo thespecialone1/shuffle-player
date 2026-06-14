@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { X, Plus, Music } from 'lucide-react';
 import { addTrackToPlaylist } from '../lib/api';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function AddToPlaylistModal({ track, onClose }) {
-  const { playlists, loadPlaylists } = usePlayerStore();
+  const { playlists, loadPlaylists } = usePlayerStore(useShallow(state => ({ playlists: state.playlists, loadPlaylists: state.loadPlaylists })));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Play, Clock, Plus } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { fetchPlaylistDetails, getStreamUrl } from '../lib/api';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
@@ -17,7 +18,7 @@ export default function PlaylistDetail() {
   const [playlist, setPlaylist] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { setQueue, currentTrack, isPlaying, play, pause } = usePlayerStore();
+  const { setQueue, currentTrack, isPlaying, play, pause } = usePlayerStore(useShallow(state => ({ setQueue: state.setQueue, currentTrack: state.currentTrack, isPlaying: state.isPlaying, play: state.play, pause: state.pause })));
   const [trackToAdd, setTrackToAdd] = useState(null);
 
   useEffect(() => {

@@ -1,10 +1,11 @@
 import React from 'react';
 import { X, Maximize2, Minimize2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import Lyrics from './Lyrics';
 
 export default function NowPlayingSidebar() {
-  const { isSidebarOpen, closeSidebar, currentTrack, toggleLyrics, isLyricsOpen } = usePlayerStore();
+  const { isSidebarOpen, closeSidebar, currentTrack, toggleLyrics, isLyricsOpen } = usePlayerStore(useShallow(state => ({ isSidebarOpen: state.isSidebarOpen, closeSidebar: state.closeSidebar, currentTrack: state.currentTrack, toggleLyrics: state.toggleLyrics, isLyricsOpen: state.isLyricsOpen })));
 
   if (!isSidebarOpen) return null;
 

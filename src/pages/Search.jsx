@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search as SearchIcon, Play, Download, Check, AlertCircle } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { searchTracks, getStreamUrl, slskdSearch, getSlskdResults, slskdDownload } from '../lib/api';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
@@ -8,7 +9,7 @@ export default function Search() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const { setQueue, currentTrack } = usePlayerStore();
+  const { setQueue, currentTrack } = usePlayerStore(useShallow(state => ({ setQueue: state.setQueue, currentTrack: state.currentTrack })));
 
   const [trackToAdd, setTrackToAdd] = useState(null);
 

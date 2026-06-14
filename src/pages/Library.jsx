@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, RefreshCw } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { fetchTracks, syncMusic, getStreamUrl } from '../lib/api';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
 export default function Library() {
-  const { setQueue, currentTrack, isPlaying } = usePlayerStore();
+  const { setQueue, currentTrack, isPlaying } = usePlayerStore(useShallow(state => ({ setQueue: state.setQueue, currentTrack: state.currentTrack, isPlaying: state.isPlaying })));
   const [tracks, setTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
