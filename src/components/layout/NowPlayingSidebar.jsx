@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, Mic2 } from 'lucide-react';
+import { X, Maximize2, Minimize2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import Lyrics from './Lyrics';
 
 export default function NowPlayingSidebar() {
   const { isSidebarOpen, closeSidebar, currentTrack, toggleLyrics, isLyricsOpen } = usePlayerStore();
@@ -8,8 +9,8 @@ export default function NowPlayingSidebar() {
   if (!isSidebarOpen) return null;
 
   return (
-    <div className="hidden lg:flex flex-col w-[350px] bg-[var(--color-surface-1)] border-l border-[var(--color-border-subtle)] overflow-y-auto hide-scrollbar z-20 shrink-0">
-      <div className="sticky top-0 p-4 border-b border-[var(--color-border-subtle)] flex items-center justify-between bg-[var(--color-surface-1)] z-10">
+    <div className="hidden lg:flex flex-col w-[350px] bg-[var(--color-surface-1)] border-l border-[var(--color-border-subtle)] overflow-hidden z-20 shrink-0">
+      <div className="sticky top-0 p-4 border-b border-[var(--color-border-subtle)] flex items-center justify-between bg-[var(--color-surface-1)] z-10 shrink-0">
         <h3 className="font-display font-semibold text-lg text-[var(--color-text-primary)]">Now Playing</h3>
         <button onClick={closeSidebar} className="p-1 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
           <X size={20} />
@@ -17,31 +18,28 @@ export default function NowPlayingSidebar() {
       </div>
 
       {currentTrack ? (
-        <div className="p-6 flex flex-col items-center">
-          <div className="w-full aspect-square rounded-xl shadow-2xl overflow-hidden mb-6 relative group">
+        <div className="p-6 flex flex-col items-center flex-1 overflow-y-auto hide-scrollbar min-h-0">
+          <div className="w-full aspect-square rounded-xl shadow-2xl overflow-hidden mb-6 relative group shrink-0">
             <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           </div>
 
-          <div className="w-full text-center mb-6">
-            <h2 className="text-2xl font-display font-bold tracking-tight mb-1 text-[var(--color-text-primary)]">{currentTrack.title}</h2>
-            <p className="text-[16px] text-[var(--color-text-secondary)]">{currentTrack.artist}</p>
+          <div className="w-full text-center mb-6 shrink-0">
+            <h2 className="text-2xl font-display font-bold tracking-tight mb-1 text-[var(--color-text-primary)] text-ellipsis-2">{currentTrack.title}</h2>
+            <p className="text-[16px] text-[var(--color-text-secondary)] text-ellipsis-1">{currentTrack.artist}</p>
           </div>
 
-          <div className="w-full bg-[var(--color-surface-2)] p-4 rounded-xl shadow-md border border-[var(--color-border-subtle)] mb-6">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-[var(--color-text-secondary)] font-medium">Lyrics View</span>
+          <div className="w-full flex-1 relative min-h-[400px] bg-[var(--color-surface-2)] rounded-xl overflow-hidden shadow-inner border border-[var(--color-border-subtle)]">
+            <div className="absolute top-3 right-3 z-20">
               <button 
                 onClick={toggleLyrics} 
-                className={`p-2 rounded-full transition-colors cursor-pointer ${isLyricsOpen ? 'bg-[var(--color-accent)] text-black' : 'hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-text-secondary)] hover:text-white'}`}
+                className="p-2 bg-black/40 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors cursor-pointer"
+                title={isLyricsOpen ? "Collapse Lyrics" : "Expand Lyrics"}
               >
-                <Mic2 size={18} />
+                {isLyricsOpen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
             </div>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-2">
-              Toggle the lyrics in the main content area.
-            </p>
+            <Lyrics compact={true} />
           </div>
-          
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center text-[var(--color-text-secondary)] p-6 text-center">
