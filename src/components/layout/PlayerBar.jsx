@@ -3,35 +3,42 @@ import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuf
 import { usePlayerStore } from '../../store/usePlayerStore';
 import MiniLyrics from '../player/MiniLyrics';
 
-export default function PlayerBar() {
-  const { currentTrack, isPlaying, togglePlay, progress, duration, toggleQueue, toggleNowPlaying } = usePlayerStore();
-
+const Scrubber = () => {
+  const { progress, duration, setProgress, setSeekTo } = usePlayerStore();
   const progressPercent = duration > 0 ? (progress / duration) * 100 : 0;
+  
+  return (
+    <div className="absolute top-0 left-0 w-full h-[16px] group cursor-pointer flex items-center z-50">
+      <div className="w-full h-[2px] group-hover:h-[4px] bg-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-200 relative pointer-events-none">
+         <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
+      </div>
+      <input 
+        type="range" 
+        min="0" max={duration || 100} step="0.1" 
+        value={progress || 0}
+        onChange={(e) => {
+          const newTime = parseFloat(e.target.value);
+          setProgress(newTime);
+          setSeekTo(newTime);
+        }}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer m-0"
+      />
+    </div>
+  );
+};
+
+export default function PlayerBar() {
+  const { currentTrack, isPlaying, togglePlay, toggleQueue, toggleNowPlaying } = usePlayerStore();
 
   return (
     <div 
-      className="fixed bottom-0 left-0 w-full z-40 px-2 sm:px-4 hover-glow backdrop-blur-xl transition-all duration-300"
+      className="fixed bottom-0 left-0 w-full z-40 px-2 sm:px-4 hover-glow backdrop-blur-xl"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <div className="w-full h-auto min-h-[64px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-t-xl sm:rounded-none overflow-hidden pb-1 sm:pb-0">
+      <div className="w-full h-auto min-h-[56px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-t-xl sm:rounded-none overflow-hidden pb-1 sm:pb-0">
         
         {/* Scrubber - Absolute top of bar */}
-        <div className="absolute top-0 left-0 w-full h-[16px] group cursor-pointer flex items-center z-50">
-          <div className="w-full h-[2px] group-hover:h-[4px] bg-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-200 relative pointer-events-none">
-             <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
-          </div>
-          <input 
-            type="range" 
-            min="0" max={duration || 100} step="0.1" 
-            value={progress || 0}
-            onChange={(e) => {
-              const newTime = parseFloat(e.target.value);
-              usePlayerStore.getState().setProgress(newTime);
-              usePlayerStore.getState().setSeekTo(newTime);
-            }}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer m-0"
-          />
-        </div>
+        <Scrubber />
 
         <div className="flex w-full items-center justify-between sm:justify-start px-2 pt-2 sm:pt-0">
           {/* Info */}
@@ -126,7 +133,7 @@ export default function PlayerBar() {
       </div>
 
       {/* Mini Lyrics below the controls row on mobile */}
-      <div className="sm:hidden w-full flex-shrink-0 z-10 pointer-events-none mt-2 px-2 pb-2 overflow-hidden">
+      <div className="sm:hidden w-full flex-shrink-0 z-10 pointer-events-none mt-1 px-2 pb-0.5 overflow-hidden">
         <MiniLyrics />
       </div>
 
