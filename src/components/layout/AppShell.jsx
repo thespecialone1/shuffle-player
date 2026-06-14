@@ -20,8 +20,25 @@ export default function AppShell() {
     usePlayerStore.getState().closeLyrics();
   }, [location.pathname]);
 
+  const dominantColor = usePlayerStore(state => state.dominantColor);
+  const currentTrack = usePlayerStore(state => state.currentTrack);
+  const isPlaying = usePlayerStore(state => state.isPlaying);
+
+  React.useEffect(() => {
+    let metaThemeColor = document.querySelector("meta[name=theme-color]");
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", currentTrack ? dominantColor : "#1A1A1A");
+    }
+  }, [dominantColor, currentTrack]);
+
   return (
-    <div className="flex h-[100dvh] w-full flex-col sm:flex-row bg-[var(--color-surface-0)] text-[var(--color-text-primary)] overflow-hidden">
+    <div 
+      className="flex h-[100dvh] w-full flex-col sm:flex-row text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+      style={{ 
+        backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)',
+        paddingTop: 'env(safe-area-inset-top)' 
+      }}
+    >
       {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
       <NavRail />
       

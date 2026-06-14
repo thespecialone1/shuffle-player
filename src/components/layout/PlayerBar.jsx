@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat, Mic2 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import MiniLyrics from '../player/MiniLyrics';
 
 export default function PlayerBar() {
   const { currentTrack, isPlaying, togglePlay, progress, duration, toggleQueue, toggleNowPlaying } = usePlayerStore();
@@ -8,8 +9,16 @@ export default function PlayerBar() {
   const progressPercent = duration > 0 ? (progress / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full h-[72px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] z-40 px-2 sm:px-4 flex items-center justify-between hover-glow backdrop-blur-xl">
+    <div 
+      className="fixed bottom-0 left-0 w-full h-[72px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] z-40 px-2 sm:px-4 flex items-center justify-between hover-glow backdrop-blur-xl"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
       
+      {/* Mobile Mini Lyrics */}
+      <div className="absolute top-[-40px] left-0 w-full pointer-events-none z-30 sm:hidden">
+        <MiniLyrics />
+      </div>
+
       {/* Scrubber - Absolute top of bar */}
       <div className="absolute top-0 left-0 w-full h-[24px] -translate-y-1/2 group cursor-pointer flex items-center sm:px-4 z-50">
         <div className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full overflow-hidden transition-all duration-200 relative pointer-events-none">

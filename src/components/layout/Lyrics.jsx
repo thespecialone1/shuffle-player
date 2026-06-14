@@ -30,16 +30,16 @@ export default function Lyrics({ compact = false }) {
         if (data && data.syncedLyrics) {
           // Parse synced lyrics
           const lines = data.syncedLyrics.split('\n').map(line => {
-            const match = line.match(/^\[(\d{2}):(\d{2}\.\d{2})\](.*)/);
+            const match = line.match(/^\[(\d{2,}):(\d{2}\.\d+)\](.*)/);
             if (match) {
-              const minutes = parseInt(match[1]);
+              const minutes = parseInt(match[1], 10);
               const seconds = parseFloat(match[2]);
               const time = minutes * 60 + seconds;
               const text = match[3].trim();
               return { time, text };
             }
             return null;
-          }).filter(l => l && l.text !== '');
+          }).filter(l => l !== null);
           
           const parsedData = { synced: true, lines };
           setLyricsCache(key, parsedData);
