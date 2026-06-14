@@ -50,7 +50,10 @@ export default function NowPlaying() {
             />
 
             {/* Top Bar */}
-            <div className="absolute top-0 left-0 w-full px-6 py-2 flex justify-between items-center z-10">
+            <div 
+              className="absolute top-0 left-0 w-full px-6 py-2 flex justify-between items-center z-10"
+              style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))' }}
+            >
               <button onClick={closeNowPlaying} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
                 <ChevronDown size={28} />
               </button>

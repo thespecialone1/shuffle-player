@@ -10,62 +10,59 @@ export default function PlayerBar() {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 w-full h-[72px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] z-40 px-2 sm:px-4 flex items-center justify-between hover-glow backdrop-blur-xl"
+      className="fixed bottom-0 left-0 w-full z-40 px-2 sm:px-4 hover-glow backdrop-blur-xl transition-all duration-300"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      
-      {/* Mobile Mini Lyrics */}
-      <div className="absolute top-[-40px] left-0 w-full pointer-events-none z-30 sm:hidden">
-        <MiniLyrics />
-      </div>
-
-      {/* Scrubber - Absolute top of bar */}
-      <div className="absolute top-0 left-0 w-full h-[24px] -translate-y-1/2 group cursor-pointer flex items-center sm:px-4 z-50">
-        <div className="w-full h-[3px] group-hover:h-[5px] bg-[rgba(255,255,255,0.1)] sm:rounded-full overflow-hidden transition-all duration-200 relative pointer-events-none">
-           <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
+      <div className="w-full h-auto min-h-[64px] sm:h-[88px] bg-gradient-to-t from-[var(--color-surface-0)] to-[color-mix(in_srgb,var(--art-color)_18%,var(--color-surface-0))] border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between relative rounded-t-xl sm:rounded-none overflow-hidden pb-1 sm:pb-0">
+        
+        {/* Scrubber - Absolute top of bar */}
+        <div className="absolute top-0 left-0 w-full h-[16px] group cursor-pointer flex items-center z-50">
+          <div className="w-full h-[2px] group-hover:h-[4px] bg-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-200 relative pointer-events-none">
+             <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
+          </div>
+          <input 
+            type="range" 
+            min="0" max={duration || 100} step="0.1" 
+            value={progress || 0}
+            onChange={(e) => {
+              const newTime = parseFloat(e.target.value);
+              usePlayerStore.getState().setProgress(newTime);
+              usePlayerStore.getState().setSeekTo(newTime);
+            }}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer m-0"
+          />
         </div>
-        <input 
-          type="range" 
-          min="0" max={duration || 100} step="0.1" 
-          value={progress || 0}
-          onChange={(e) => {
-            const newTime = parseFloat(e.target.value);
-            usePlayerStore.getState().setProgress(newTime);
-            usePlayerStore.getState().setSeekTo(newTime);
-          }}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer m-0"
-        />
-      </div>
 
-      {/* Info */}
-      <div className="flex items-center gap-3 w-[45%] sm:w-1/3 min-w-0 cursor-pointer" onClick={(e) => {
-        if (window.innerWidth >= 1024) {
-          usePlayerStore.getState().toggleSidebar();
-        } else {
-          usePlayerStore.getState().toggleNowPlaying();
-        }
-      }}>
-         {currentTrack ? (
-           <>
-            <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-12 h-12 sm:w-14 sm:h-14 rounded bg-[var(--color-surface-2)] object-cover shadow-md" />
-            <div className="flex flex-col min-w-0">
-              <span className="font-semibold text-[15px] text-[var(--color-text-primary)] text-ellipsis-1">{currentTrack.title}</span>
-              <span className="text-[13px] text-[var(--color-text-secondary)] text-ellipsis-1">{currentTrack.artist}</span>
-            </div>
-           </>
-         ) : (
-           <div className="flex items-center gap-3 opacity-50">
-             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded bg-[var(--color-surface-2)]" />
-             <div className="flex flex-col gap-1">
-               <div className="w-24 h-4 bg-[var(--color-surface-2)] rounded" />
-               <div className="w-16 h-3 bg-[var(--color-surface-2)] rounded" />
-             </div>
-           </div>
-         )}
-      </div>
+        <div className="flex w-full items-center justify-between sm:justify-start px-2 pt-2 sm:pt-0">
+          {/* Info */}
+          <div className="flex items-center gap-3 w-[60%] sm:w-1/3 min-w-0 cursor-pointer" onClick={(e) => {
+            if (window.innerWidth >= 1024) {
+              usePlayerStore.getState().toggleSidebar();
+            } else {
+              usePlayerStore.getState().toggleNowPlaying();
+            }
+          }}>
+             {currentTrack ? (
+               <>
+                <img src={currentTrack.coverArt} alt={currentTrack.title} className="w-10 h-10 sm:w-14 sm:h-14 rounded bg-[var(--color-surface-2)] object-cover shadow-md shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="font-semibold text-[14px] sm:text-[15px] text-[var(--color-text-primary)] text-ellipsis-1">{currentTrack.title}</span>
+                  <span className="text-[12px] sm:text-[13px] text-[var(--color-text-secondary)] text-ellipsis-1">{currentTrack.artist}</span>
+                </div>
+               </>
+             ) : (
+               <div className="flex items-center gap-3 opacity-50">
+                 <div className="w-10 h-10 sm:w-14 sm:h-14 rounded bg-[var(--color-surface-2)]" />
+                 <div className="flex flex-col gap-1">
+                   <div className="w-24 h-4 bg-[var(--color-surface-2)] rounded" />
+                   <div className="w-16 h-3 bg-[var(--color-surface-2)] rounded" />
+                 </div>
+               </div>
+             )}
+          </div>
 
-      {/* Controls */}
-      <div className="flex flex-col items-center justify-center sm:flex-1 w-auto sm:max-w-[400px]">
+          {/* Controls */}
+          <div className="flex items-center justify-end sm:justify-center sm:flex-1 w-[40%] sm:max-w-[400px]">
         <div className="flex items-center gap-3 sm:gap-6">
           <button 
             onClick={() => usePlayerStore.getState().toggleShuffle()}
@@ -125,7 +122,15 @@ export default function PlayerBar() {
           <Maximize2 size={18} />
         </button>
       </div>
-      
+
+      </div>
+
+      {/* Mini Lyrics below the controls row on mobile */}
+      <div className="sm:hidden w-full flex-shrink-0 z-10 pointer-events-none mt-2 px-2 pb-2 overflow-hidden">
+        <MiniLyrics />
+      </div>
+
+      </div>
     </div>
   );
 }

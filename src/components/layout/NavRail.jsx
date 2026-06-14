@@ -21,7 +21,12 @@ export default function NavRail() {
 
   return (
     <>
-      <nav className="fixed sm:relative bottom-[72px] sm:bottom-0 left-0 w-full sm:w-[64px] lg:w-[220px] h-[64px] sm:h-full bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center lg:items-start p-2 lg:p-4 shrink-0 transition-all duration-300">
+      <nav 
+        className="fixed sm:relative left-0 w-full sm:w-[64px] lg:w-[220px] h-[64px] sm:h-full bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300"
+        style={{
+          bottom: window.innerWidth < 640 ? 'calc(96px + env(safe-area-inset-bottom))' : '0'
+        }}
+      >
         
         {/* Brand - desktop only */}
         <div className="hidden lg:flex items-center gap-2 mb-8 px-2 w-full">
@@ -31,13 +36,13 @@ export default function NavRail() {
           <span className="font-display font-bold text-lg tracking-tight">Shuffle</span>
         </div>
 
-        <div className="flex sm:flex-col items-center lg:items-start justify-around sm:justify-start w-full gap-2 lg:gap-1">
+        <div className="flex sm:flex-col items-center lg:items-start justify-center sm:justify-start w-full gap-8 sm:gap-2 lg:gap-1">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center gap-4 px-3 py-3 w-full rounded-lg transition-colors group ${
+                `flex items-center justify-center sm:justify-start gap-4 px-3 py-3 w-auto sm:w-full rounded-lg transition-colors group ${
                   isActive ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.05)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[rgba(255,255,255,0.03)]'
                 }`
               }

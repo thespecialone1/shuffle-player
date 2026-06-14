@@ -35,15 +35,21 @@ export default function MiniLyrics() {
   if (!activeLine) return null;
 
   return (
-    <div className="w-full flex justify-center pb-2">
+    <div className="w-full flex justify-center items-end min-h-[24px]">
       <AnimatePresence mode="wait">
         <motion.div
           key={activeLine}
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          transition={{ duration: 0.3 }}
-          className="text-[14px] sm:text-[15px] font-medium text-[var(--color-text-primary)] text-center drop-shadow-md px-4 truncate max-w-full"
+          initial={{ opacity: 0, y: 15, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 1.05 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="text-[14px] sm:text-[15px] font-display font-bold text-[var(--color-text-primary)] text-center drop-shadow-lg px-2 leading-tight"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
+          }}
         >
           {activeLine}
         </motion.div>

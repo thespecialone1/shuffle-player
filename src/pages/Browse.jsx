@@ -46,44 +46,44 @@ export default function Browse() {
     }
   };
 
-  const TrackRow = ({ title, tracks, limit, showRank }) => {
-    if (!tracks || tracks.length === 0) return null;
-    const displayTracks = limit ? tracks.slice(0, limit) : tracks;
-    
-    return (
-      <div className="mb-12">
-        <h2 className="text-2xl font-display font-bold mb-6 px-4 sm:px-8">{title}</h2>
-        <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 px-4 sm:px-8 pb-4 snap-x snap-mandatory">
-          {displayTracks.map((track, idx) => (
-            <div 
-              key={`${track.id}-${idx}`} 
-              onDoubleClick={() => setQueue(displayTracks, idx)} 
-              className="snap-start shrink-0 w-[140px] sm:w-[180px] group bg-[var(--color-surface-1)] p-4 rounded-xl hover:bg-[var(--color-surface-2)] transition-colors cursor-pointer flex flex-col relative"
-            >
-              <div className="relative w-full aspect-square mb-4 rounded-md overflow-hidden shadow-md">
-                <img src={track.coverArt} alt={track.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); setQueue(displayTracks, idx); }}
-                    className="w-12 h-12 rounded-full bg-[var(--color-accent)] text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer transform translate-y-4 group-hover:translate-y-0"
-                  >
-                    <Play size={20} fill="currentColor" className="ml-1" />
-                  </button>
-                </div>
-                {showRank && (
-                  <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-white font-bold text-xs px-2 py-1 rounded-md shadow-lg">
-                    #{idx + 1}
-                  </div>
-                )}
+const TrackRow = ({ title, tracks, limit, showRank, onPlay }) => {
+  if (!tracks || tracks.length === 0) return null;
+  const displayTracks = limit ? tracks.slice(0, limit) : tracks;
+  
+  return (
+    <div className="mb-12">
+      <h2 className="text-2xl font-display font-bold mb-6 px-4 sm:px-8">{title}</h2>
+      <div className="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 px-4 sm:px-8 pb-4 snap-x snap-mandatory">
+        {displayTracks.map((track, idx) => (
+          <div 
+            key={`${track.id}-${idx}`} 
+            onDoubleClick={() => onPlay(displayTracks, idx)} 
+            className="snap-start shrink-0 w-[140px] sm:w-[180px] group bg-[var(--color-surface-1)] p-4 rounded-xl hover:bg-[var(--color-surface-2)] transition-colors cursor-pointer flex flex-col relative"
+          >
+            <div className="relative w-full aspect-square mb-4 rounded-md overflow-hidden shadow-md">
+              <img src={track.coverArt} alt={track.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onPlay(displayTracks, idx); }}
+                  className="w-12 h-12 rounded-full bg-[var(--color-accent)] text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer transform translate-y-4 group-hover:translate-y-0"
+                >
+                  <Play size={20} fill="currentColor" className="ml-1" />
+                </button>
               </div>
-              <h3 className="font-semibold text-[14px] sm:text-[15px] text-[var(--color-text-primary)] text-ellipsis-1 mb-1">{track.title}</h3>
-              <p className="text-[12px] sm:text-[13px] text-[var(--color-text-secondary)] text-ellipsis-1">{track.artist}</p>
+              {showRank && (
+                <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-white font-bold text-xs px-2 py-1 rounded-md shadow-lg">
+                  #{idx + 1}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+            <h3 className="font-semibold text-[14px] sm:text-[15px] text-[var(--color-text-primary)] text-ellipsis-1 mb-1">{track.title}</h3>
+            <p className="text-[12px] sm:text-[13px] text-[var(--color-text-secondary)] text-ellipsis-1">{track.artist}</p>
+          </div>
+        ))}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-full pb-8">
@@ -119,9 +119,9 @@ export default function Browse() {
         )}
       </div>
 
-      <TrackRow title="Recently Played" tracks={recentTracks} limit={2} />
-      <TrackRow title="Most Played" tracks={mostPlayed} showRank={true} />
-      <TrackRow title="Recently Added" tracks={newestTracks} limit={8} />
+      <TrackRow title="Recently Played" tracks={recentTracks} limit={2} onPlay={setQueue} />
+      <TrackRow title="Most Played" tracks={mostPlayed} showRank={true} onPlay={setQueue} />
+      <TrackRow title="Recently Added" tracks={newestTracks} limit={8} onPlay={setQueue} />
 
     </div>
   );

@@ -43,7 +43,12 @@ export default function AppShell() {
       <NavRail />
       
       {/* Main Content Area */}
-      <main className="flex-1 relative overflow-y-auto pb-[160px] sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar">
+      <main 
+        className="flex-1 relative overflow-y-auto sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar"
+        style={{
+          paddingBottom: window.innerWidth < 640 ? 'calc(170px + env(safe-area-inset-bottom))' : undefined
+        }}
+      >
         <LyricsView />
         <AnimatePresence mode="wait">
           <motion.div
