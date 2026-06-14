@@ -36,6 +36,25 @@ async function getToken() {
 
 export async function initiateSearch(query) {
   const token = await getToken();
+  
+  // Clear existing searches to avoid queueing up and hanging slskd
+  try {
+    const listRes = await fetch(`${SLSKD_URL}/searches`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (listRes.ok) {
+      const searches = await listRes.json();
+      for (const s of searches) {
+        await fetch(`${SLSKD_URL}/searches/${s.id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Failed to clear previous slskd searches', err);
+  }
+
   const searchId = crypto.randomUUID();
   
   const controller = new AbortController();
