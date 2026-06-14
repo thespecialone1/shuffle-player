@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePlayerStore } from '../../store/usePlayerStore';
 
 export default function MiniLyrics() {
-  const { currentTrack, progress, lyricsCache } = usePlayerStore();
+  const currentTrack = usePlayerStore(state => state.currentTrack);
+  const progress = usePlayerStore(state => state.progress);
+  const lyricsCache = usePlayerStore(state => state.lyricsCache);
   const [activeLine, setActiveLine] = useState('');
 
   useEffect(() => {

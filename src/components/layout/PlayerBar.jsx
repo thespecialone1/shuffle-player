@@ -28,12 +28,29 @@ const Scrubber = () => {
 };
 
 export default function PlayerBar() {
-  const { currentTrack, isPlaying, togglePlay, toggleQueue, toggleNowPlaying } = usePlayerStore();
+  const currentTrack = usePlayerStore(state => state.currentTrack);
+  const isPlaying = usePlayerStore(state => state.isPlaying);
+  const togglePlay = usePlayerStore(state => state.togglePlay);
+  const toggleQueue = usePlayerStore(state => state.toggleQueue);
+  
+  const playerRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!playerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      if (playerRef.current) {
+        document.documentElement.style.setProperty('--player-height', `${playerRef.current.offsetHeight}px`);
+      }
+    });
+    observer.observe(playerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div 
+      ref={playerRef}
       className="fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl bg-[var(--color-surface-0)] border-t border-[var(--color-border-subtle)]"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      style={{ paddingBottom: 'max(env(safe-area-inset-bottom) - 8px, 0px)' }}
     >
       <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         

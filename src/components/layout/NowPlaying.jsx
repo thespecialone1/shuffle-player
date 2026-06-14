@@ -5,18 +5,53 @@ import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 import Lyrics from './Lyrics';
 
-export default function NowPlaying() {
-  const { currentTrack, isPlaying, togglePlay, progress, duration, setProgress, setSeekTo, isNowPlayingFullscreen, closeNowPlaying } = usePlayerStore();
-  const [showLyrics, setShowLyrics] = React.useState(false);
+const formatTime = (seconds) => {
+  if (!seconds) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+};
 
-  const progressPercent = duration ? (progress / duration) * 100 : 0;
+const NowPlayingScrubber = () => {
+  const progress = usePlayerStore(state => state.progress);
+  const duration = usePlayerStore(state => state.duration);
+  const setProgress = usePlayerStore(state => state.setProgress);
+  const setSeekTo = usePlayerStore(state => state.setSeekTo);
   
-  const formatTime = (seconds) => {
-    if (!seconds) return '0:00';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
+  const progressPercent = duration ? (progress / duration) * 100 : 0;
+
+  return (
+    <div className="w-full mb-8 relative group">
+      <div className="w-full h-[6px] bg-[rgba(255,255,255,0.1)] rounded-full relative pointer-events-none overflow-hidden">
+        <div className="absolute left-0 top-0 h-full bg-[var(--color-text-primary)] rounded-full transition-all duration-100 ease-linear" style={{ width: `${progressPercent}%` }} />
+      </div>
+      <input 
+        type="range" 
+        min="0" max={duration || 100} step="0.1" 
+        value={progress || 0}
+        onChange={(e) => {
+          const newTime = parseFloat(e.target.value);
+          setProgress(newTime);
+          setSeekTo(newTime);
+        }}
+        className="absolute top-1/2 left-0 w-full -translate-y-1/2 h-[32px] opacity-0 cursor-pointer m-0 z-50"
+      />
+      <div className="flex justify-between text-xs text-[var(--color-text-tertiary)] mt-3 font-mono pointer-events-none">
+        <span>{formatTime(progress)}</span>
+        <span>{formatTime(duration)}</span>
+      </div>
+    </div>
+  );
+};
+
+export default function NowPlaying() {
+  const currentTrack = usePlayerStore(state => state.currentTrack);
+  const isPlaying = usePlayerStore(state => state.isPlaying);
+  const togglePlay = usePlayerStore(state => state.togglePlay);
+  const isNowPlayingFullscreen = usePlayerStore(state => state.isNowPlayingFullscreen);
+  const closeNowPlaying = usePlayerStore(state => state.closeNowPlaying);
+  
+  const [showLyrics, setShowLyrics] = React.useState(false);
 
   if (!currentTrack) return null;
 
@@ -102,26 +137,7 @@ export default function NowPlaying() {
               </div>
 
               {/* Scrubber */}
-              <div className="w-full mb-8 relative group">
-                <div className="w-full h-[6px] bg-[rgba(255,255,255,0.1)] rounded-full relative pointer-events-none overflow-hidden">
-                  <div className="absolute left-0 top-0 h-full bg-[var(--color-text-primary)] rounded-full transition-all duration-100 ease-linear" style={{ width: `${progressPercent}%` }} />
-                </div>
-                <input 
-                  type="range" 
-                  min="0" max={duration || 100} step="0.1" 
-                  value={progress || 0}
-                  onChange={(e) => {
-                    const newTime = parseFloat(e.target.value);
-                    setProgress(newTime);
-                    setSeekTo(newTime);
-                  }}
-                  className="absolute top-1/2 left-0 w-full -translate-y-1/2 h-[32px] opacity-0 cursor-pointer m-0 z-50"
-                />
-                <div className="flex justify-between text-xs text-[var(--color-text-tertiary)] mt-3 font-mono pointer-events-none">
-                  <span>{formatTime(progress)}</span>
-                  <span>{formatTime(duration)}</span>
-                </div>
-              </div>
+              <NowPlayingScrubber />
 
               {/* Controls */}
               <div className="flex items-center justify-between w-full px-2">

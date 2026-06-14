@@ -75,7 +75,7 @@ export default function AppShell() {
       <main 
         className="flex-1 relative overflow-y-auto sm:pb-[88px] bg-gradient-to-b from-[var(--color-surface-1)] to-[var(--color-surface-0)] hide-scrollbar"
         style={{
-          paddingBottom: window.innerWidth < 640 ? 'calc(170px + env(safe-area-inset-bottom))' : undefined
+          paddingBottom: window.innerWidth < 640 ? 'calc(var(--player-height, 90px) + 64px)' : undefined
         }}
       >
         <LyricsView />
