@@ -37,7 +37,7 @@ export default function MiniLyrics() {
   if (!activeLine) return null;
 
   return (
-    <div className="w-full flex justify-center items-end min-h-[24px]">
+    <div className="w-full h-full flex justify-center items-end min-h-[24px]">
       <AnimatePresence mode="wait">
         <motion.div
           key={activeLine}
