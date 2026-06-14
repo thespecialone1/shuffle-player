@@ -38,6 +38,9 @@ export async function initiateSearch(query) {
   const token = await getToken();
   const searchId = crypto.randomUUID();
   
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  
   const response = await fetch(`${SLSKD_URL}/searches`, {
     method: 'POST',
     headers: {
@@ -48,8 +51,10 @@ export async function initiateSearch(query) {
       id: searchId,
       searchText: query,
       searchTimeout: 120000 // 2 minutes in milliseconds
-    })
+    }),
+    signal: controller.signal
   });
+  clearTimeout(timeout);
 
   if (!response.ok) {
     throw new Error(`Failed to initiate search: ${response.statusText}`);
@@ -61,20 +66,28 @@ export async function initiateSearch(query) {
 export async function getSearchResults(searchId) {
   const token = await getToken();
   
+  const controller1 = new AbortController();
+  const timeout1 = setTimeout(() => controller1.abort(), 5000);
   const statusRes = await fetch(`${SLSKD_URL}/searches/${searchId}`, {
-    headers: { 'Authorization': `Bearer ${token}` }
+    headers: { 'Authorization': `Bearer ${token}` },
+    signal: controller1.signal
   });
+  clearTimeout(timeout1);
   if (!statusRes.ok) {
     throw new Error(`Failed to fetch search status: ${statusRes.statusText}`);
   }
   const statusData = await statusRes.json();
   const searchState = statusData.state;
 
+  const controller2 = new AbortController();
+  const timeout2 = setTimeout(() => controller2.abort(), 5000);
   const response = await fetch(`${SLSKD_URL}/searches/${searchId}/responses`, {
     headers: {
       'Authorization': `Bearer ${token}`
-    }
+    },
+    signal: controller2.signal
   });
+  clearTimeout(timeout2);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch search results: ${response.statusText}`);

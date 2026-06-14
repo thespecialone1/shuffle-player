@@ -339,7 +339,10 @@ app.get('/api/lyrics', async (req, res) => {
 
     // 2. Fetch from lrclib
     const params = new URLSearchParams({ artist_name, track_name });
-    const response = await fetch(`https://lrclib.net/api/get?${params}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const response = await fetch(`https://lrclib.net/api/get?${params}`, { signal: controller.signal });
+    clearTimeout(timeout);
     
     if (response.status === 404) {
       return res.status(404).json({ error: 'Lyrics not found' });
