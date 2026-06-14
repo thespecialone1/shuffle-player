@@ -157,7 +157,7 @@ export default function PlayerBar() {
 
       {/* Mini Lyrics below the controls row on mobile */}
       <div 
-        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none px-3 pb-[14px] flex items-end justify-center h-[64px] overflow-hidden"
+        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 pb-2 h-[44px] overflow-hidden"
       >
         <MiniLyrics />
       </div>
