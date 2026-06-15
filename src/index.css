@@ -25,13 +25,17 @@
   color-scheme: dark;
 }
 
-body {
+html, body {
   background-color: var(--color-surface-0);
   color: var(--color-text-primary);
   font-family: var(--font-body);
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
+  position: fixed;
   overflow: hidden;
+  overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -127,38 +131,23 @@ body {
   background: var(--color-text-tertiary);
 }
 
-/* Liquid Glass Design System
-   Inspired by Jhey's toggle — realistic optical edge lighting via
-   multi-layered box-shadow. NO SVG filters, NO pseudo-elements. */
+/* Liquid Glass Design System */
 .liquid-glass {
   position: relative;
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.10) 0%,
-      rgba(255, 255, 255, 0.02) 40%,
-      rgba(255, 255, 255, 0.04) 100%
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.01) 40%,
+      rgba(255, 255, 255, 0.02) 100%
     ),
-    rgba(20, 20, 20, 0.45);
+    rgba(20, 20, 20, 0.25);
   border: none;
-  backdrop-filter: blur(18px) saturate(1.6);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  /* Jhey's glass edge lighting — direct from the reference .shadow class */
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
   box-shadow:
-    /* Top-left specular highlights — light hitting the glass edge */
-    1px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    0px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    -1px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    -2px -1px 2px hsl(0 0% 100% / 0.25) inset,
-    /* Bottom-right refraction shadows — depth and curvature */
-    1px 1px 2px hsl(0 0% 30% / 0.5) inset,
-    -8px 4px 10px -6px hsl(0 0% 30% / 0.25) inset,
-    -1px 1px 6px hsl(0 0% 30% / 0.25) inset,
-    /* Outer glow — subtle light spill around the glass */
-    -1px -1px 8px hsl(0 0% 60% / 0.10),
-    1px 1px 2px hsl(0 0% 30% / 0.10),
-    2px 2px 6px hsl(0 0% 30% / 0.10),
-    /* Deep cast shadow — glass sitting on a surface */
-    3px 6px 16px -6px hsl(0 0% 30% / 0.4),
-    0 8px 32px rgba(0, 0, 0, 0.25);
+    /* Soft ambient inner glow */
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    /* Soft outer drop shadow */
+    0 8px 32px rgba(0, 0, 0, 0.3);
 }

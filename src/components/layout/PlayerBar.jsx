@@ -166,14 +166,7 @@ export default function PlayerBar({ className = '', isDesktop = false }) {
           <Maximize2 size={18} />
         </button>
       </div>
-
       </div>
-
-      {/* Mini Lyrics below the controls row on mobile */}
-      <div className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center h-[28px]">
-        <MiniLyrics />
-      </div>
-
       </div>
     </div>
   );

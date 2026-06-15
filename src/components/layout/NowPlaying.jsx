@@ -70,8 +70,22 @@ export default function NowPlaying() {
           <Drawer.Description className="sr-only">Player controls</Drawer.Description>
 
           {/* Draggable Handle */}
-          <div className="p-4 rounded-t-[32px] flex-shrink-0 flex items-center justify-center">
+          <div className="pt-3 pb-1 flex-shrink-0 flex items-center justify-center w-full">
             <div className="w-12 h-1.5 rounded-full bg-[var(--color-text-secondary)]/30" />
+          </div>
+
+          {/* Top Bar */}
+          <div className="w-full px-6 py-2 flex justify-between items-center z-10 shrink-0">
+            <button onClick={closeNowPlaying} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
+              <ChevronDown size={28} />
+            </button>
+            <span className="text-xs uppercase tracking-widest font-semibold text-[var(--color-text-secondary)]">Now Playing</span>
+            <button 
+              onClick={() => setShowLyrics(!showLyrics)} 
+              className={`p-2 rounded-full transition-colors cursor-pointer ${showLyrics ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.1)]' : 'text-[var(--color-text-secondary)] hover:bg-[rgba(255,255,255,0.1)]'}`}
+            >
+              <Mic2 size={22} />
+            </button>
           </div>
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 pb-12 overflow-y-auto hide-scrollbar">
@@ -86,25 +100,8 @@ export default function NowPlaying() {
               }}
             />
 
-            {/* Top Bar */}
-            <div 
-              className="absolute top-0 left-0 w-full px-6 pb-2 pt-2 flex justify-between items-center z-10"
-              style={{ paddingTop: 'env(safe-area-inset-top)' }}
-            >
-              <button onClick={closeNowPlaying} className="p-2 rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors cursor-pointer text-[var(--color-text-secondary)]">
-                <ChevronDown size={28} />
-              </button>
-              <span className="text-xs uppercase tracking-widest font-semibold text-[var(--color-text-secondary)]">Now Playing</span>
-              <button 
-                onClick={() => setShowLyrics(!showLyrics)} 
-                className={`p-2 rounded-full transition-colors cursor-pointer ${showLyrics ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.1)]' : 'text-[var(--color-text-secondary)] hover:bg-[rgba(255,255,255,0.1)]'}`}
-              >
-                <Mic2 size={22} />
-              </button>
-            </div>
-
             {/* Content Container */}
-            <div className="relative z-10 w-full max-w-md flex flex-col items-center mt-20">
+            <div className="relative z-10 w-full max-w-md flex flex-col items-center mt-4 sm:mt-8">
               
               {/* Album Art or Lyrics */}
               <div className="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] mb-10 relative">

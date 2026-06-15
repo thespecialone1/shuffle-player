@@ -8,7 +8,27 @@ import QueueDrawer from './QueueDrawer';
 import AudioPlayer from '../AudioPlayer';
 import LyricsView from './LyricsView';
 import NowPlayingSidebar from './NowPlayingSidebar';
+import MiniLyrics from '../player/MiniLyrics';
 import { usePlayerStore } from '../../store/usePlayerStore';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("App boundary caught:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <div className="p-4 text-red-500">Something went wrong rendering the UI.</div>;
+    }
+    return this.props.children;
+  }
+}
 
 const TopAura = ({ currentTrack, isPlaying }) => {
   if (!currentTrack) return null;
@@ -58,13 +78,14 @@ export default function AppShell() {
   }, [dominantColor, currentTrack]);
 
   return (
-    <div 
-      className="fixed top-0 left-0 h-dvh w-dvw flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
-      style={{ 
-        backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)',
-        paddingTop: 'env(safe-area-inset-top)' 
-      }}
-    >
+    <ErrorBoundary>
+      <div 
+        className="fixed top-0 left-0 bottom-0 right-0 w-full h-full flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+        style={{ 
+          backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)',
+          paddingTop: 'env(safe-area-inset-top)' 
+        }}
+      >
       {/* MAIN ROW - Takes up all remaining vertical space above the PlayerBar */}
       <div className="flex-1 flex flex-row overflow-hidden relative">
         <NavRail className="hidden sm:flex shrink-0" />
@@ -102,16 +123,19 @@ export default function AppShell() {
         <PlayerBar isDesktop={true} />
       </div>
 
-      {/* Mobile: PlayerBar → NavRail (NavRail at absolute bottom edge) */}
+      {/* Mobile: PlayerBar → NavRail → Lyrics (at absolute bottom edge) */}
       <div 
-        className="sm:hidden shrink-0 flex flex-col z-40 relative"
+        className="sm:hidden shrink-0 flex flex-col z-40 relative w-full"
         style={{ 
-          paddingBottom: 'env(safe-area-inset-bottom)',
-          backgroundColor: 'var(--color-surface-1)'
+          backgroundColor: 'var(--color-surface-1)',
+          paddingBottom: 'env(safe-area-inset-bottom)'
         }}
       >
         <PlayerBar />
         <NavRail />
+        <div className="w-full h-[28px] shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center">
+          <MiniLyrics />
+        </div>
       </div>
 
       {/* Full Screen Now Playing Drawer */}
@@ -120,5 +144,6 @@ export default function AppShell() {
       {/* Invisible Audio Engine */}
       <AudioPlayer />
     </div>
+    </ErrorBoundary>
   );
 }
