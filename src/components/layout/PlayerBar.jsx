@@ -64,7 +64,7 @@ export default function PlayerBar({ className = '', isDesktop = false }) {
   return (
     <div 
       ref={playerRef}
-      className={`w-full z-40 px-0 sm:px-4 liquid-glass border-[var(--color-border-subtle)] ${isDesktop ? 'border-t relative' : 'relative'} ${className}`}
+      className={`w-full z-40 px-0 sm:px-4 liquid-glass ${isDesktop ? 'border-t border-[var(--color-border-subtle)] relative' : 'relative'} ${className}`}
     >
       <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         
@@ -170,13 +170,7 @@ export default function PlayerBar({ className = '', isDesktop = false }) {
       </div>
 
       {/* Mini Lyrics below the controls row on mobile */}
-      <div 
-        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center"
-        style={{ 
-          height: 'calc(44px + env(safe-area-inset-bottom))',
-          paddingBottom: 'env(safe-area-inset-bottom)'
-        }}
-      >
+      <div className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center h-[28px]">
         <MiniLyrics />
       </div>
 

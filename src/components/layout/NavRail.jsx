@@ -38,7 +38,7 @@ export default function NavRail({ className = '' }) {
   return (
     <>
       <nav 
-        className={`relative w-full sm:w-[64px] lg:w-[220px] h-auto sm:h-[100dvh] bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300 ${className}`}
+        className={`relative w-full sm:w-[64px] lg:w-[220px] h-auto sm:h-[100dvh] bg-[var(--color-surface-1)] sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-around sm:justify-start lg:items-start px-1 sm:px-2 lg:p-4 py-1 sm:py-0 shrink-0 transition-all duration-300 ${className}`}
       >
         
         {/* Brand - desktop only */}
@@ -50,7 +50,7 @@ export default function NavRail({ className = '' }) {
         </div>
 
         <div 
-          className="flex sm:flex-col items-center lg:items-start justify-center sm:justify-start w-full gap-8 sm:gap-2 lg:gap-1"
+          className="flex sm:flex-col items-center lg:items-start justify-around sm:justify-start w-full sm:gap-2 lg:gap-1"
           onTouchMove={handleTouchMove}
         >
           {navItems.map((item) => (
@@ -59,15 +59,17 @@ export default function NavRail({ className = '' }) {
               to={item.path}
               data-path={item.path}
               className={({ isActive }) => 
-                `flex items-center justify-center sm:justify-start gap-4 px-3 py-3 w-auto sm:w-full rounded-lg transition-colors group ${
-                  isActive ? 'text-[var(--color-accent)] bg-[rgba(255,255,255,0.05)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[rgba(255,255,255,0.03)]'
+                `flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-4 px-3 py-2 sm:py-3 w-auto sm:w-full sm:rounded-lg transition-all group ${
+                  isActive 
+                    ? 'text-[var(--color-accent)]' 
+                    : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] sm:hover:bg-[rgba(255,255,255,0.03)]'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <item.icon className="w-7 h-7 sm:w-6 sm:h-6 shrink-0" strokeWidth={isActive ? 2.5 : 1.5} />
-                  <span className={`hidden lg:block font-medium text-sm ${isActive ? 'text-[var(--color-text-primary)]' : ''}`}>{item.name}</span>
+                  <item.icon className="w-6 h-6 sm:w-6 sm:h-6 shrink-0" strokeWidth={isActive ? 2.5 : 1.5} />
+                  <span className={`text-[10px] sm:text-sm sm:font-medium ${isActive ? 'font-semibold sm:text-[var(--color-text-primary)]' : ''} lg:block ${className.includes('hidden') ? 'hidden' : 'block sm:hidden lg:block'}`}>{item.name}</span>
                 </>
               )}
             </NavLink>

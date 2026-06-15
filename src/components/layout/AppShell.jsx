@@ -102,11 +102,16 @@ export default function AppShell() {
         <PlayerBar isDesktop={true} />
       </div>
 
-      {/* Mobile Tab Bar & Player Stack */}
-      <div className="sm:hidden shrink-0 flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-40 relative">
-        {/* NavRail above PlayerBar on mobile pushes Lyrics to the very bottom */}
-        <NavRail />
+      {/* Mobile: PlayerBar → NavRail (NavRail at absolute bottom edge) */}
+      <div 
+        className="sm:hidden shrink-0 flex flex-col z-40 relative"
+        style={{ 
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          backgroundColor: 'var(--color-surface-1)'
+        }}
+      >
         <PlayerBar />
+        <NavRail />
       </div>
 
       {/* Full Screen Now Playing Drawer */}

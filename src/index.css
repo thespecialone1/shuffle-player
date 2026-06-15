@@ -140,7 +140,7 @@ body {
       rgba(255, 255, 255, 0.04) 100%
     ),
     rgba(20, 20, 20, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: none;
   backdrop-filter: blur(18px) saturate(1.6);
   -webkit-backdrop-filter: blur(18px) saturate(1.6);
   /* Jhey's glass edge lighting — direct from the reference .shadow class */
