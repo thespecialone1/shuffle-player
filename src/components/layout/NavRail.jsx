@@ -38,8 +38,7 @@ export default function NavRail({ className = '' }) {
   return (
     <>
       <nav 
-        className={`relative w-full sm:w-[64px] lg:w-[220px] h-auto sm:h-full bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300 ${className}`}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        className={`relative w-full sm:w-[64px] lg:w-[220px] h-auto sm:h-[100dvh] bg-[var(--color-surface-1)] border-t sm:border-t-0 sm:border-r border-[var(--color-border-subtle)] z-20 flex sm:flex-col items-center justify-center lg:items-start px-2 lg:p-4 shrink-0 transition-all duration-300 ${className}`}
       >
         
         {/* Brand - desktop only */}

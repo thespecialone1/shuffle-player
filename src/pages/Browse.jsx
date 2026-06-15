@@ -102,7 +102,7 @@ const TrackRow = ({ title, tracks, limit, showRank, onPlay }) => {
             <div className="relative z-10 w-full flex justify-between items-end gap-4">
               <div className="min-w-0 flex-1">
                 <span className="text-xs font-bold tracking-widest uppercase text-[var(--color-accent)] mb-2 block">Featured Song</span>
-                <h1 className={`${featuredTrack.title.length > 25 ? 'text-2xl sm:text-4xl' : 'text-4xl sm:text-5xl'} font-display font-bold text-white mb-2 line-clamp-2 leading-tight`}>{featuredTrack.title}</h1>
+                <h1 className={`${featuredTrack.title?.length > 25 ? 'text-2xl sm:text-4xl' : 'text-4xl sm:text-5xl'} font-display font-bold text-white mb-2 line-clamp-2 leading-tight`}>{featuredTrack.title}</h1>
                 <p className="text-lg text-[var(--color-text-secondary)] line-clamp-1">{featuredTrack.artist}</p>
               </div>
               <button 
