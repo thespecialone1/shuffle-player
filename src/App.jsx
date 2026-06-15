@@ -11,7 +11,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AppShell />}>
-          <Route index element={<Navigate to="/library" replace />} />
+          <Route index element={<Browse />} />
           <Route path="library" element={<Library />} />
           <Route path="browse" element={<Browse />} />
           <Route path="search" element={<Search />} />
