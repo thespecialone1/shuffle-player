@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat, Mic2, Home, Search, Library } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Volume2, ListMusic, Maximize2, Shuffle, Repeat, Mic2, Home, Search, Library, DownloadCloud } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Link, useLocation } from 'react-router-dom';
@@ -44,6 +44,8 @@ export default function PlayerBar({ className = '', isDesktop = false }) {
     { path: '/', icon: Home, label: 'Home' },
     { path: '/search', icon: Search, label: 'Search' },
     { path: '/library', icon: Library, label: 'Library' },
+    { path: '/playlists', icon: ListMusic, label: 'Playlists' },
+    { path: '/downloads', icon: DownloadCloud, label: 'Downloads' },
   ];
 
   if (!currentTrack && isDesktop) return null;

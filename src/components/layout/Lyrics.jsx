@@ -12,6 +12,16 @@ export default function Lyrics({ compact = false }) {
   
   const containerRef = useRef(null);
   const activeLineRef = useRef(null);
+  const scrollTimeout = useRef(null);
+  const [userInteracted, setUserInteracted] = useState(false);
+
+  const handleInteraction = () => {
+    setUserInteracted(true);
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      setUserInteracted(false);
+    }, 4000);
+  };
 
   useEffect(() => {
     if (!currentTrack) return;
@@ -80,13 +90,13 @@ export default function Lyrics({ compact = false }) {
 
   // Auto-scroll to active line
   useEffect(() => {
-    if (activeLineRef.current && containerRef.current) {
+    if (!userInteracted && activeLineRef.current && containerRef.current) {
       activeLineRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
       });
     }
-  }, [activeIndex, lyricsData]);
+  }, [activeIndex, lyricsData, userInteracted]);
 
   if (loading) {
     return (
@@ -108,6 +118,9 @@ export default function Lyrics({ compact = false }) {
   return (
     <div 
       ref={containerRef}
+      onWheel={handleInteraction}
+      onTouchMove={handleInteraction}
+      onMouseDown={handleInteraction}
       className={`relative w-full h-full overflow-y-auto hide-scrollbar scroll-smooth ${compact ? 'px-6 py-8' : 'px-8 sm:px-16 py-24 sm:py-32'}`}
       style={{
         maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',

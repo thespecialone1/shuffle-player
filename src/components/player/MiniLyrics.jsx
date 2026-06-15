@@ -37,7 +37,7 @@ export default function MiniLyrics() {
   if (!activeLine) return null;
 
   return (
-    <div className="w-full flex-shrink-0 flex items-center justify-center py-2 px-4 bg-transparent min-h-[48px]">
+    <div className="w-full flex-shrink-0 flex items-center justify-center py-2 px-4 bg-transparent min-h-[48px] border-t border-[rgba(255,255,255,0.05)]">
       <div className="w-full h-full flex justify-center items-start">
         <AnimatePresence mode="wait">
           <motion.div
