@@ -67,6 +67,17 @@ app.get('/api/slskd/search', async (req, res) => {
   }
 });
 
+app.delete('/api/slskd/search/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ error: 'Search ID is required' });
+    await slskd.deleteSearch(id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get('/api/slskd/results', async (req, res) => {
   try {
     const id = req.query.id;

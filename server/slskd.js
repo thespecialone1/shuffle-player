@@ -147,6 +147,18 @@ export async function getSearchResults(searchId) {
   };
 }
 
+export async function deleteSearch(searchId) {
+  const token = await getToken();
+  try {
+    await fetch(`${SLSKD_URL}/searches/${searchId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+  } catch (err) {
+    console.error(`Failed to delete search ${searchId}`, err);
+  }
+}
+
 export async function queueDownload(username, filename, size) {
   const token = await getToken();
   const payload = [{ filename, size }];

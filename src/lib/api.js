@@ -24,6 +24,12 @@ export async function slskdSearch(query) {
   return response.json();
 }
 
+export async function slskdStopSearch(id) {
+  const response = await fetch(`${API_URL}/slskd/search/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  if (!response.ok) throw new Error('Failed to stop slskd search');
+  return response.json();
+}
+
 export async function getSlskdResults(id) {
   const response = await fetch(`${API_URL}/slskd/results?id=${encodeURIComponent(id)}`);
   if (!response.ok) throw new Error('Failed to fetch slskd results');

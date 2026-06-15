@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search as SearchIcon, Play, Download, Check, AlertCircle } from 'lucide-react';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useShallow } from 'zustand/react/shallow';
-import { searchTracks, getStreamUrl, slskdSearch, getSlskdResults, slskdDownload } from '../lib/api';
+import { searchTracks, getStreamUrl, slskdSearch, getSlskdResults, slskdDownload, slskdStopSearch } from '../lib/api';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
 
 export default function Search() {
@@ -45,6 +45,15 @@ export default function Search() {
           
           if (data.state === 'Completed' || data.state === 'Cancelled' || data.state === 'Faulted') {
             clearInterval(interval);
+          } else if (data.results.length >= 50) {
+            // We have enough results, stop the search automatically to save resources
+            try {
+              await slskdStopSearch(slskdSearchId);
+            } catch (e) {
+              console.error('Failed to auto-stop slskd search', e);
+            }
+            setIsSlskdSearching(false);
+            clearInterval(interval);
           }
         } catch (e) {
           console.error('Failed to poll slskd results', e);
@@ -53,6 +62,16 @@ export default function Search() {
     }
     return () => clearInterval(interval);
   }, [slskdSearchId]);
+
+  const handleStopSearch = async () => {
+    if (!slskdSearchId) return;
+    try {
+      await slskdStopSearch(slskdSearchId);
+    } catch (e) {
+      console.error('Failed to stop search', e);
+    }
+    setIsSlskdSearching(false);
+  };
 
   const performSearch = async (q) => {
     if (!q.trim()) {
@@ -200,9 +219,19 @@ export default function Search() {
         {/* Soulseek Network Section */}
         {query && (
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-xl font-display font-medium text-[var(--color-text-secondary)]">Soulseek Network</h2>
-              {isSlskdSearching && <div className="w-4 h-4 rounded-full border-2 border-[var(--color-text-secondary)] border-t-[var(--color-accent)] animate-spin"></div>}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-display font-medium text-[var(--color-text-secondary)]">Soulseek Network</h2>
+                {isSlskdSearching && <div className="w-4 h-4 rounded-full border-2 border-[var(--color-text-secondary)] border-t-[var(--color-accent)] animate-spin"></div>}
+              </div>
+              {isSlskdSearching && (
+                <button 
+                  onClick={handleStopSearch}
+                  className="px-3 py-1 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] rounded-full text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                >
+                  Stop Search
+                </button>
+              )}
             </div>
             
             <div className="flex flex-col gap-2">
