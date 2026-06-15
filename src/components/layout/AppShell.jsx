@@ -72,7 +72,7 @@ export default function AppShell() {
   return (
     <ErrorBoundary>
       <div 
-        className="fixed top-0 left-0 w-full h-full flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+        className="fixed top-0 left-0 w-full h-[100dvh] flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
         style={{ backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)' }}
       >
         <div className="flex-1 flex flex-row overflow-hidden relative">
@@ -107,17 +107,20 @@ export default function AppShell() {
 
         {/* Mobile Unified Bottom Stack */}
         <div 
-          className="sm:hidden flex flex-col z-40 w-full shrink-0"
+          className="sm:hidden flex flex-col z-40 w-full shrink-0 relative"
           style={{ 
             backgroundColor: 'var(--color-surface-1)',
             paddingBottom: 'env(safe-area-inset-bottom)'
           }}
         >
+          {/* Top border edge lighting */}
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-[rgba(255,255,255,0.05)] z-50 pointer-events-none" />
+          
           {/* PlayerBar handles core playback and merged nav */}
           <PlayerBar />
           
           {/* Absolute Bottom Lyrics Container */}
-          <div className="w-full flex-shrink-0 flex items-center justify-center py-2 px-4" style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 10%, var(--color-surface-1))' }}>
+          <div className="w-full flex-shrink-0 flex items-center justify-center py-2 px-4 bg-transparent min-h-[48px]">
             <MiniLyrics />
           </div>
         </div>
