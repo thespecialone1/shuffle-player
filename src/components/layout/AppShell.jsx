@@ -133,7 +133,7 @@ export default function AppShell() {
       >
         <PlayerBar />
         <NavRail />
-        <div className="w-full h-[28px] shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center">
+        <div className="w-full min-h-[44px] py-1 h-auto shrink-0 relative z-10 pointer-events-none px-3 overflow-hidden flex items-center justify-center">
           <MiniLyrics />
         </div>
       </div>
