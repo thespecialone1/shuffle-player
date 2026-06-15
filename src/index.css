@@ -5,16 +5,16 @@
   --color-surface-1: #111111;
   --color-surface-2: #1A1A1A;
   --color-surface-3: #222222;
-  
+
   --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-border-default: rgba(255, 255, 255, 0.10);
-  
+
   --color-text-primary: #F2F2F2;
   --color-text-secondary: #A3A3A3;
   --color-text-tertiary: #5C5C5C;
-  
+
   --color-accent: #1DB954;
-  
+
   --font-display: "DM Sans", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -38,8 +38,13 @@ body {
 
 /* Animations */
 @keyframes vinyl-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .vinyl-spin {
@@ -48,13 +53,31 @@ body {
 }
 
 @keyframes eq-bar {
-  0%, 100% { height: 4px; }
-  50%       { height: 14px; }
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 14px;
+  }
 }
 
-.eq-bar-1 { animation: eq-bar 600ms infinite; animation-delay: 0ms; }
-.eq-bar-2 { animation: eq-bar 600ms infinite; animation-delay: 160ms; }
-.eq-bar-3 { animation: eq-bar 600ms infinite; animation-delay: 320ms; }
+.eq-bar-1 {
+  animation: eq-bar 600ms infinite;
+  animation-delay: 0ms;
+}
+
+.eq-bar-2 {
+  animation: eq-bar 600ms infinite;
+  animation-delay: 160ms;
+}
+
+.eq-bar-3 {
+  animation: eq-bar 600ms infinite;
+  animation-delay: 320ms;
+}
 
 /* Route Transitions */
 ::view-transition-old(root),
@@ -90,33 +113,44 @@ body {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-surface-3);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-tertiary);
 }
 
 /* Liquid Glass Design System */
 .liquid-glass {
-  /* Semi-transparent fill */
+  position: relative;
   background: rgba(255, 255, 255, 0.04);
-  
-  /* The core effect: blur, saturate, and SVG displacement */
-  backdrop-filter: blur(16px) saturate(1.2) url(#liquid-glass-filter);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2) url(#liquid-glass-filter);
-  
-  /* Specular highlight gradient border and chromatic aberration shadows */
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.15),     /* Top/left highlight */
-    inset -1px -1px 0px rgba(255, 255, 255, 0.02),   /* Bottom/right edge */
-    0 10px 40px rgba(0, 0, 0, 0.3),                  /* Drop shadow */
-    2px 0px 8px rgba(255, 0, 0, 0.05),               /* Red chromatic edge */
-    -2px 0px 8px rgba(0, 255, 255, 0.05);            /* Cyan chromatic edge */
-    
   border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.02),
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    2px 0px 8px rgba(255, 0, 0, 0.05),
+    -2px 0px 8px rgba(0, 255, 255, 0.05);
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  /* frost: works fine in backdrop-filter */
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+  /* distortion: only works via filter, not backdrop-filter */
+  filter: url(#liquid-glass-filter);
 }
