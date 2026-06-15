@@ -72,13 +72,13 @@ export default function AppShell() {
   return (
     <ErrorBoundary>
       <div 
-        className="fixed top-0 left-0 w-full h-[100dvh] flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+        className="absolute top-0 right-0 bottom-0 left-0 flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
         style={{ backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)' }}
       >
         <div className="flex-1 flex flex-row overflow-hidden relative">
           <NavRail className="hidden sm:flex shrink-0" />
           
-          <main className="flex-1 overflow-y-auto relative z-10 hide-scrollbar scroll-smooth" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+          <main className="flex-1 overflow-y-auto relative z-10 hide-scrollbar scroll-smooth">
             <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
             <div className="relative z-10 min-h-full pb-32">
               <AnimatePresence mode="wait">
