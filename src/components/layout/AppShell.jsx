@@ -65,14 +65,6 @@ export default function AppShell() {
         paddingTop: 'env(safe-area-inset-top)' 
       }}
     >
-      {/* Liquid Glass SVG Distortion Filter */}
-      <svg className="fixed w-0 h-0 pointer-events-none" style={{ position: 'absolute', zIndex: -1 }}>
-        <filter id="liquid-glass-filter" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
-
       {/* MAIN ROW - Takes up all remaining vertical space above the PlayerBar */}
       <div className="flex-1 flex flex-row overflow-hidden relative">
         <NavRail className="hidden sm:flex shrink-0" />
