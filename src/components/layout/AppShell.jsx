@@ -65,6 +65,14 @@ export default function AppShell() {
         paddingTop: 'env(safe-area-inset-top)' 
       }}
     >
+      {/* Liquid Glass SVG Distortion Filter */}
+      <svg className="fixed w-0 h-0 pointer-events-none" style={{ position: 'absolute', zIndex: -1 }}>
+        <filter id="liquid-glass-filter" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+
       {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
       <NavRail className="hidden sm:flex" />
       

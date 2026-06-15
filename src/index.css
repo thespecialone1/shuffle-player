@@ -100,3 +100,23 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-tertiary);
 }
+
+/* Liquid Glass Design System */
+.liquid-glass {
+  /* Semi-transparent fill */
+  background: rgba(255, 255, 255, 0.04);
+  
+  /* The core effect: blur, saturate, and SVG displacement */
+  backdrop-filter: blur(16px) saturate(1.2) url(#liquid-glass-filter);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2) url(#liquid-glass-filter);
+  
+  /* Specular highlight gradient border and chromatic aberration shadows */
+  box-shadow: 
+    inset 1px 1px 0px rgba(255, 255, 255, 0.15),     /* Top/left highlight */
+    inset -1px -1px 0px rgba(255, 255, 255, 0.02),   /* Bottom/right edge */
+    0 10px 40px rgba(0, 0, 0, 0.3),                  /* Drop shadow */
+    2px 0px 8px rgba(255, 0, 0, 0.05),               /* Red chromatic edge */
+    -2px 0px 8px rgba(0, 255, 255, 0.05);            /* Cyan chromatic edge */
+    
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}

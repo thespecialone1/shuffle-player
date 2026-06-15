@@ -50,7 +50,7 @@ export default function PlayerBar() {
   return (
     <div 
       ref={playerRef}
-      className="relative sm:fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 hover-glow backdrop-blur-xl bg-[var(--color-surface-0)] sm:border-t border-[var(--color-border-subtle)]"
+      className="relative sm:fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 liquid-glass sm:border-t border-[var(--color-border-subtle)]"
     >
       <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         

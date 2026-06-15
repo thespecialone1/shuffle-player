@@ -111,8 +111,7 @@ export default function NowPlaying() {
                     initial={{ opacity: 0, rotateY: 90 }}
                     animate={{ opacity: 1, rotateY: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-full h-full rounded-2xl shadow-2xl overflow-hidden relative"
-                    style={{ backgroundColor: 'color-mix(in srgb, var(--art-color) 40%, var(--color-surface-0))' }}
+                    className="w-full h-full rounded-[28px] overflow-hidden relative liquid-glass"
                   >
                     <Lyrics compact={true} />
                   </motion.div>
