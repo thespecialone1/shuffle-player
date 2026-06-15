@@ -114,8 +114,8 @@ export default function AppShell() {
 
       {/* Mobile Tab Bar & Player Stack */}
       <div className="sm:hidden fixed bottom-0 left-0 w-full z-40 flex flex-col shadow-2xl">
-        <NavRail />
         <PlayerBar />
+        <NavRail />
       </div>
 
       {/* Full Screen Now Playing Drawer */}
