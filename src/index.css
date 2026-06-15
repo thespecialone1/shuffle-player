@@ -130,48 +130,9 @@ body {
 /* Liquid Glass Design System */
 .liquid-glass {
   position: relative;
-  isolation: isolate;
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.04) 100%),
-    rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    1px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    0px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    -1px -1px 2px hsl(0 0% 100% / 0.3) inset,
-    1px 1px 2px hsl(0 0% 30% / 0.5) inset,
-    -8px 4px 10px -6px hsl(0 0% 30% / 0.25) inset,
-    -1px 1px 6px hsl(0 0% 30% / 0.25) inset,
-    -1px -1px 8px hsl(0 0% 60% / 0.15), 
-    1px 1px 2px hsl(0 0% 30% / 0.15),
-    2px 2px 6px hsl(0 0% 30% / 0.15),
-    -2px -1px 2px hsl(0 0% 100% / 0.25) inset,
-    3px 6px 16px -6px hsl(0 0% 30% / 0.5),
-    0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* center: clear-ish, color boosted, barely blurred */
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -1;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.08) contrast(1.05);
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.08) contrast(1.05);
-}
-
-/* edges: refraction ring — masked so it fades out toward the center */
-.liquid-glass::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -1;
-  backdrop-filter: blur(4px) saturate(1.4);
-  -webkit-backdrop-filter: blur(4px) saturate(1.4);
-  mask-image: radial-gradient(ellipse at center, transparent 55%, black 90%);
-  -webkit-mask-image: radial-gradient(ellipse at center, transparent 55%, black 90%);
+  background: rgba(20, 20, 20, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
