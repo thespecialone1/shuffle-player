@@ -33,29 +33,38 @@ const Scrubber = () => {
   );
 };
 
-export default function PlayerBar() {
+export default function PlayerBar({ className = '', isDesktop = false }) {
   const currentTrack = usePlayerStore(state => state.currentTrack);
   const isPlaying = usePlayerStore(state => state.isPlaying);
   const togglePlay = usePlayerStore(state => state.togglePlay);
+  const nextTrack = usePlayerStore(state => state.nextTrack);
+  const previousTrack = usePlayerStore(state => state.previousTrack);
+  const progress = usePlayerStore(state => state.progress);
+  const duration = usePlayerStore(state => state.duration);
+  const seekTo = usePlayerStore(state => state.seekTo);
+  const toggleLyrics = usePlayerStore(state => state.toggleLyrics);
+  const isLyricsOpen = usePlayerStore(state => state.isLyricsOpen);
+  const openNowPlaying = usePlayerStore(state => state.openNowPlaying);
   const toggleQueue = usePlayerStore(state => state.toggleQueue);
-  
+
+  const [isHovering, setIsHovering] = React.useState(false);
   const playerRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!playerRef.current) return;
     const observer = new ResizeObserver(() => {
-      if (playerRef.current) {
-        document.documentElement.style.setProperty('--player-height', `${playerRef.current.offsetHeight}px`);
-      }
+      document.documentElement.style.setProperty('--player-bar-height', `${playerRef.current.offsetHeight}px`);
     });
     observer.observe(playerRef.current);
     return () => observer.disconnect();
   }, []);
 
+  if (!currentTrack) return null;
+
   return (
     <div 
       ref={playerRef}
-      className="relative sm:fixed bottom-0 left-0 w-full z-40 px-0 sm:px-4 liquid-glass sm:border-t border-[var(--color-border-subtle)]"
+      className={`w-full z-40 px-0 sm:px-4 liquid-glass border-[var(--color-border-subtle)] ${isDesktop ? 'border-t relative' : 'relative'} ${className}`}
     >
       <div className="w-full h-auto min-h-[64px] sm:h-[88px] flex flex-col sm:flex-row items-center justify-between relative overflow-hidden pb-0">
         

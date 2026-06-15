@@ -59,7 +59,7 @@ export default function AppShell() {
 
   return (
     <div 
-      className="fixed inset-0 flex flex-col sm:flex-row text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+      className="fixed inset-0 flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
       style={{ 
         backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)',
         paddingTop: 'env(safe-area-inset-top)' 
@@ -73,47 +73,46 @@ export default function AppShell() {
         </filter>
       </svg>
 
-      {/* Nav Rail on the left (desktop) or bottom tab bar (mobile logic inside NavRail) */}
-      <NavRail className="hidden sm:flex" />
+      {/* MAIN ROW - Takes up all remaining vertical space above the PlayerBar */}
+      <div className="flex-1 flex flex-row overflow-hidden relative">
+        <NavRail className="hidden sm:flex shrink-0" />
+        
+        <main 
+          className="flex-1 relative overflow-y-auto hide-scrollbar"
+          style={{
+            background: `linear-gradient(to bottom, transparent 0%, var(--color-surface-1) 10%, var(--color-surface-0) 100%)`
+          }}
+        >
+          <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
+          <LyricsView />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="mx-auto max-w-7xl p-4 sm:p-8 min-h-full pb-[40px]"
+            >
+              {outlet}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+
+        <NowPlayingSidebar />
+        <QueueDrawer />
+      </div>
+
+      {/* BOTTOM BARS - Fully static in flex column, completely prevents overlap bugs */}
       
-      {/* Dynamic Island Aura Effect */}
-      <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
-      
-      {/* Main Content Area */}
-      <main 
-        className="flex-1 relative overflow-y-auto pb-[130px] sm:pb-[88px] hide-scrollbar"
-        style={{
-          background: `linear-gradient(to bottom, transparent 0%, var(--color-surface-1) 10%, var(--color-surface-0) 100%)`
-        }}
-      >
-        <LyricsView />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="mx-auto max-w-7xl p-4 sm:p-8 min-h-full"
-          >
-            {outlet}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-
-      {/* Desktop Right Sidebar */}
-      <NowPlayingSidebar />
-
-      {/* Slide-out Queue */}
-      <QueueDrawer />
-
       {/* Desktop Player Bar */}
-      <div className="hidden sm:block">
-        <PlayerBar />
+      <div className="hidden sm:block shrink-0 relative z-40">
+        <PlayerBar isDesktop={true} />
       </div>
 
       {/* Mobile Tab Bar & Player Stack */}
-      <div className="sm:hidden fixed bottom-0 left-0 w-full z-40 flex flex-col shadow-2xl">
+      <div className="sm:hidden shrink-0 flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-40 relative">
+        {/* NavRail above PlayerBar on mobile pushes Lyrics to the very bottom */}
         <NavRail />
         <PlayerBar />
       </div>
