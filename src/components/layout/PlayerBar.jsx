@@ -10,8 +10,13 @@ const Scrubber = () => {
   
   return (
     <div className="absolute top-0 left-0 w-full h-[16px] group cursor-pointer flex items-center z-50">
-      <div className="w-full h-[2px] group-hover:h-[4px] bg-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-200 relative pointer-events-none">
-         <div className="absolute top-0 left-0 h-full bg-[var(--art-color)]" style={{ width: `${progressPercent}%` }} />
+      <div className="w-full h-[2px] group-hover:h-[4px] bg-[rgba(255,255,255,0.1)] transition-all duration-200 pointer-events-none relative">
+        <div 
+          className="absolute left-0 top-0 h-full bg-[var(--color-accent)] transition-all duration-100 ease-linear flex justify-end items-center" 
+          style={{ width: `${progressPercent}%` }} 
+        >
+          <div className="w-[10px] h-[10px] bg-[var(--color-text-primary)] rounded-full translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-sm" />
+        </div>
       </div>
       <input 
         type="range" 
@@ -157,7 +162,11 @@ export default function PlayerBar() {
 
       {/* Mini Lyrics below the controls row on mobile */}
       <div 
-        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 pb-2 h-[44px] overflow-hidden"
+        className="sm:hidden w-full flex-shrink-0 relative z-10 pointer-events-none mt-1 px-3 overflow-hidden"
+        style={{ 
+          height: 'calc(44px + env(safe-area-inset-bottom))',
+          paddingBottom: 'calc(8px + env(safe-area-inset-bottom))'
+        }}
       >
         <MiniLyrics />
       </div>

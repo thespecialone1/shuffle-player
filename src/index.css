@@ -130,27 +130,37 @@ body {
 /* Liquid Glass Design System */
 .liquid-glass {
   position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  box-shadow:
-    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
+  background: 
+    linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.04) 100%),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 1px 1px 0px rgba(255, 255, 255, 0.2),
     inset -1px -1px 0px rgba(255, 255, 255, 0.02),
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    2px 0px 8px rgba(255, 0, 0, 0.05),
-    -2px 0px 8px rgba(0, 255, 255, 0.05);
+    0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* center: clear-ish, color boosted, barely blurred */
 .liquid-glass::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+  backdrop-filter: blur(3px) saturate(1.8) brightness(1.08) contrast(1.05);
+  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.08) contrast(1.05);
+}
 
-  /* frost: works fine in backdrop-filter */
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-  /* distortion: only works via filter, not backdrop-filter */
+/* edges: refraction ring — masked so it fades out toward the center */
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: blur(4px) saturate(1.4);
+  -webkit-backdrop-filter: blur(4px) saturate(1.4);
   filter: url(#liquid-glass-filter);
+  mask-image: radial-gradient(ellipse at center, transparent 55%, black 90%);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 55%, black 90%);
 }
