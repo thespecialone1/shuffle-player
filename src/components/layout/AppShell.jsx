@@ -59,7 +59,7 @@ export default function AppShell() {
 
   return (
     <div 
-      className="flex h-[100dvh] w-full flex-col sm:flex-row text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+      className="fixed inset-0 flex flex-col sm:flex-row text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
       style={{ 
         backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)',
         paddingTop: 'env(safe-area-inset-top)' 
