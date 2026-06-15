@@ -25,26 +25,26 @@
   color-scheme: dark;
 }
 
-html, body, #root {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-top: env(safe-area-inset-top);
-  overflow: hidden;
+html, body {
   margin: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
   background-color: var(--color-surface-0);
   color: var(--color-text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* Base resets */

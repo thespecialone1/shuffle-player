@@ -72,15 +72,19 @@ export default function AppShell() {
   return (
     <ErrorBoundary>
       <div 
-        className="absolute top-0 right-0 bottom-0 left-0 flex flex-col text-[var(--color-text-primary)] overflow-hidden transition-colors duration-700"
+        className="flex-1 w-full flex flex-col text-[var(--color-text-primary)] transition-colors duration-700 min-h-screen"
         style={{ backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)' }}
       >
-        <div className="flex-1 flex flex-row overflow-hidden relative">
-          <NavRail className="hidden sm:flex shrink-0" />
+        <div className="flex-1 flex flex-row relative w-full">
+          {/* Desktop Nav: Sticky to keep it on screen while body scrolls */}
+          <div className="hidden sm:block sticky top-0 h-screen shrink-0 pb-[90px]">
+            <NavRail className="flex h-full" />
+          </div>
           
-          <main className="flex-1 overflow-y-auto relative z-10 hide-scrollbar scroll-smooth">
+          {/* Main content natively scrolls with the browser body */}
+          <main className="flex-1 w-full relative z-10 pb-[180px] sm:pb-[120px]">
             <TopAura currentTrack={currentTrack} isPlaying={isPlaying} />
-            <div className="relative z-10 min-h-full pb-32">
+            <div className="relative z-10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={location.pathname}
@@ -96,18 +100,19 @@ export default function AppShell() {
             </div>
           </main>
 
-          <NowPlayingSidebar />
-          <QueueDrawer />
+          <div className="hidden lg:block sticky top-0 h-screen shrink-0 pb-[90px]">
+            <NowPlayingSidebar />
+          </div>
         </div>
 
         {/* Desktop Bottom Bar */}
-        <div className="hidden sm:block shrink-0 relative z-40">
+        <div className="hidden sm:block fixed bottom-0 left-0 w-full z-50">
           <PlayerBar isDesktop={true} />
         </div>
 
-        {/* Mobile Unified Bottom Stack */}
+        {/* Mobile Unified Bottom Stack: Force fixed to bottom of viewport */}
         <div 
-          className="sm:hidden flex flex-col z-40 w-full shrink-0 relative"
+          className="sm:hidden fixed bottom-0 left-0 w-full flex flex-col z-50"
           style={{ 
             backgroundColor: 'var(--color-surface-1)',
             paddingBottom: 'env(safe-area-inset-bottom)'
@@ -116,10 +121,8 @@ export default function AppShell() {
           {/* Top border edge lighting */}
           <div className="absolute top-0 left-0 w-full h-[1px] bg-[rgba(255,255,255,0.05)] z-50 pointer-events-none" />
           
-          {/* PlayerBar handles core playback and merged nav */}
           <PlayerBar />
           
-          {/* Absolute Bottom Lyrics Container */}
           <div className="w-full flex-shrink-0 flex items-center justify-center py-2 px-4 bg-transparent min-h-[48px]">
             <MiniLyrics />
           </div>
@@ -127,6 +130,7 @@ export default function AppShell() {
 
         <NowPlaying />
         <AudioPlayer />
+        <QueueDrawer />
       </div>
     </ErrorBoundary>
   );
