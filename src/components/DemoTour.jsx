@@ -30,26 +30,7 @@ export default function DemoTour() {
   
   const navigate = useNavigate();
 
-  // Mouse icon without tail (Figma style pointer)
-  const MouseCursor = () => (
-    <motion.div
-      animate={{ 
-        x: mousePos.x, 
-        y: mousePos.y,
-        scale: isClicking ? 0.8 : 1 
-      }}
-      className="fixed z-[10000] pointer-events-none drop-shadow-md origin-top-left"
-      transition={{ 
-        x: { type: 'spring', damping: 25, stiffness: 120, mass: 0.8 },
-        y: { type: 'spring', damping: 25, stiffness: 120, mass: 0.8 },
-        scale: { duration: 0.1 }
-      }}
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5.5 3.21V20.8C5.5 21.46 6.27 21.82 6.78 21.39L10.5 18.23C10.74 18.03 11.05 17.92 11.37 17.92H18.5C19.19 17.92 19.56 17.11 19.1 16.59L6.1 2.05C5.74 1.64 5.5 1.93 5.5 3.21Z" fill="black" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
-      </svg>
-    </motion.div>
-  );
+
 
   const moveMouseTo = async (selector, offsetX = 0, offsetY = 0) => {
     const el = document.querySelector(selector);
@@ -161,7 +142,24 @@ export default function DemoTour() {
       <AnimatePresence>
         {isTourActive && (
           <>
-            <MouseCursor />
+            <motion.div
+              initial={{ x: window.innerWidth / 2, y: window.innerHeight / 2 }}
+              animate={{ 
+                x: mousePos.x, 
+                y: mousePos.y,
+                scale: isClicking ? 0.8 : 1 
+              }}
+              className="fixed z-[10000] pointer-events-none drop-shadow-md origin-top-left"
+              transition={{ 
+                x: { type: 'spring', damping: 25, stiffness: 120, mass: 0.8 },
+                y: { type: 'spring', damping: 25, stiffness: 120, mass: 0.8 },
+                scale: { duration: 0.1 }
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.5 3.21V20.8C5.5 21.46 6.27 21.82 6.78 21.39L10.5 18.23C10.74 18.03 11.05 17.92 11.37 17.92H18.5C19.19 17.92 19.56 17.11 19.1 16.59L6.1 2.05C5.74 1.64 5.5 1.93 5.5 3.21Z" fill="black" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+              </svg>
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
