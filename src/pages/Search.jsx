@@ -13,6 +13,40 @@ export default function Search() {
 
   const [trackToAdd, setTrackToAdd] = useState(null);
 
+  const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
+  const [placeholderText, setPlaceholderText] = useState("What do you want to listen to?");
+
+  useEffect(() => {
+    if (!isDemoMode) return;
+    const phrases = ["Search for The Weeknd...", "Search for Midnight City...", "Find any song on Soulseek..."];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let timer;
+
+    const tick = () => {
+      const currentPhrase = phrases[phraseIndex];
+      if (!isDeleting && charIndex < currentPhrase.length) {
+        setPlaceholderText(currentPhrase.substring(0, charIndex + 1));
+        charIndex++;
+        timer = setTimeout(tick, 100);
+      } else if (isDeleting && charIndex > 0) {
+        setPlaceholderText(currentPhrase.substring(0, charIndex - 1));
+        charIndex--;
+        timer = setTimeout(tick, 50);
+      } else if (!isDeleting && charIndex === currentPhrase.length) {
+        isDeleting = true;
+        timer = setTimeout(tick, 2000); // pause at end
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        timer = setTimeout(tick, 500);
+      }
+    };
+    timer = setTimeout(tick, 1000);
+    return () => clearTimeout(timer);
+  }, [isDemoMode]);
+
   // Slskd State
   const [slskdSearchId, setSlskdSearchId] = useState(null);
   const [slskdResults, setSlskdResults] = useState([]);
@@ -160,7 +194,7 @@ export default function Search() {
           type="text" 
           value={query}
           onChange={handleSearch}
-          placeholder="What do you want to listen to?" 
+          placeholder={placeholderText} 
           className="w-full bg-transparent border-b border-[var(--color-border-subtle)] py-6 pl-12 pr-6 text-2xl sm:text-3xl font-display font-medium text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-text-secondary)] transition-colors placeholder-[var(--color-text-tertiary)]"
           autoFocus
         />

@@ -6,8 +6,19 @@
   --color-surface-2: #1A1A1A;
   --color-surface-3: #222222;
 
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
   --color-border-default: rgba(255, 255, 255, 0.10);
+
+  --bg-mix-percent: 30%; /* Default strong mix for mobile */
+}
+
+@media (min-width: 640px) {
+  :root {
+    --bg-mix-percent: 8%; /* Very subtle mix for laptops/desktops */
+  }
+}
+
+html {
 
   --color-text-primary: #F2F2F2;
   --color-text-secondary: #A3A3A3;

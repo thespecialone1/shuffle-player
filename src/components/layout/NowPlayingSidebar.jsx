@@ -29,7 +29,7 @@ export default function NowPlayingSidebar() {
             <p className="text-[16px] text-[var(--color-text-secondary)] text-ellipsis-1">{currentTrack.artist}</p>
           </div>
 
-          <div className="w-full flex-1 relative min-h-[400px] bg-[var(--color-surface-2)] rounded-xl overflow-hidden shadow-inner border border-[var(--color-border-subtle)]">
+          <div className="w-full flex-none h-[200px] relative bg-[var(--color-surface-2)] rounded-xl overflow-hidden shadow-inner border border-[var(--color-border-subtle)]">
             <div className="absolute top-3 right-3 z-20">
               <button 
                 onClick={toggleLyrics} 

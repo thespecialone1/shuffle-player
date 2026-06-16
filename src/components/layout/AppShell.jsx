@@ -75,8 +75,8 @@ export default function AppShell() {
   return (
     <ErrorBoundary>
       <div 
-        className="flex-1 w-full flex flex-col text-[var(--color-text-primary)] transition-colors duration-700 min-h-screen"
-        style={{ backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) 30%, var(--color-surface-0))' : 'var(--color-surface-0)' }}
+        className="fixed inset-0 w-full flex flex-col text-[var(--color-text-primary)] transition-colors duration-700 overflow-y-auto"
+        style={{ backgroundColor: currentTrack ? 'color-mix(in srgb, var(--art-color) var(--bg-mix-percent), var(--color-surface-0))' : 'var(--color-surface-0)' }}
       >
         <div className="flex-1 flex flex-row relative w-full">
           {/* Desktop Nav: Sticky to keep it on screen while body scrolls */}

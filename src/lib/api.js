@@ -32,12 +32,12 @@ export async function syncMusic() {
     // Simulate syncing the downloaded track
     const newTrack = {
       id: 'demo-local-3',
-      title: 'Blinding Lights',
-      artist: 'The Weeknd',
-      album: 'After Hours',
-      duration: 200,
-      coverArt: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=400',
-      audioUrl: 'https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg'
+      title: 'SoundHelix Song 3',
+      artist: 'T. Schürger (SoundHelix)',
+      album: 'Electronic Elements',
+      duration: 340,
+      coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
     };
     if (!currentLibrary.find(t => t.id === newTrack.id)) {
       currentLibrary.push(newTrack);
