@@ -4,8 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/shuffle/',
+export default defineConfig(({ mode }) => ({
+  base: process.env.VITE_DEMO_MODE === 'true' ? '/shuffle/' : '/',
   server: {
     port: 80,
     host: true,
@@ -50,4 +50,4 @@ export default defineConfig({
       }
     })
   ],
-})
+}))
