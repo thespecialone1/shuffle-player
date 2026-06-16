@@ -7,9 +7,11 @@ import PlaylistDetail from './pages/PlaylistDetail';
 import Playlists from './pages/Playlists';
 import Downloads from './pages/Downloads';
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<AppShell />}>
           <Route index element={<Browse />} />

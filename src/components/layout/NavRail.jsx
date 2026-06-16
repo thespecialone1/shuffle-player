@@ -44,7 +44,7 @@ export default function NavRail({ className = '' }) {
         {/* Brand - desktop only */}
         <div className="hidden lg:flex items-center gap-2 mb-8 px-2 w-full">
           <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg bg-black overflow-hidden shrink-0">
-             <img src="/logo.png" alt="Shuffle Logo" className="w-full h-full object-cover" />
+             <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Shuffle Logo" className="w-full h-full object-cover" />
           </div>
           <span className="font-display font-bold text-lg tracking-tight">Shuffle</span>
         </div>
