@@ -146,18 +146,30 @@ export async function recordPlay(id) {
 }
 
 export async function fetchRecentTracks() {
+  if (isDemoMode) {
+    await delay(300);
+    return currentLibrary.slice(0, 2);
+  }
   const response = await fetch(`${API_URL}/tracks/recent`);
   if (!response.ok) throw new Error('Failed to fetch recent tracks');
   return response.json();
 }
 
 export async function fetchMostPlayedTracks() {
+  if (isDemoMode) {
+    await delay(300);
+    return currentLibrary;
+  }
   const response = await fetch(`${API_URL}/tracks/most-played`);
   if (!response.ok) throw new Error('Failed to fetch most played tracks');
   return response.json();
 }
 
 export async function fetchNewestTracks() {
+  if (isDemoMode) {
+    await delay(300);
+    return currentLibrary.slice().reverse();
+  }
   const response = await fetch(`${API_URL}/tracks/newest`);
   if (!response.ok) throw new Error('Failed to fetch newest tracks');
   return response.json();
