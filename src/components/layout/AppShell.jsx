@@ -9,6 +9,9 @@ import AudioPlayer from '../AudioPlayer';
 import NowPlayingSidebar from './NowPlayingSidebar';
 import MiniLyrics from '../player/MiniLyrics';
 import { usePlayerStore } from '../../store/usePlayerStore';
+import DemoTour from '../DemoTour';
+
+const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -131,6 +134,7 @@ export default function AppShell() {
         <NowPlaying />
         <AudioPlayer />
         <QueueDrawer />
+        {isDemoMode && <DemoTour />}
       </div>
     </ErrorBoundary>
   );
